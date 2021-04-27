@@ -44,14 +44,9 @@ export namespace generations {
 
 	}
 
-	export function getGenerationByName(name: string): Generation {
-		let generationId = helpers.getGenerationId(name)
+	export function increaseGenerationMinted(generationId: string, name: string): Generation {
 		let generation = helpers.getOrCreateGeneration(generationId, name)
-		return generation
-	}
 
-	export function increaseGenerationMinted(name: string): Generation {
-		let generation = getGenerationByName(name)
 		generation.minted = generation.minted.plus(integer.ONE)
 		return generation
 	}

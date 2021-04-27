@@ -25,10 +25,12 @@ export namespace tokens {
 	}
 	export function mintAvastar(
 		tokenId: string, serial: BigInt, generation: string, series: string
+		gender: string,
 	): Avastar {
 		let avastar = loadAvastar(tokenId)
 		avastar.serial = serial
 		avastar.generation = generations.helpers.getGenerationId(generation)
+		avastar.series = seriesModule.helpers.getSeriesId(series)
 		avastar.series = seriesModule.helpers.getSeriesId(series)
 		return avastar
 	}

@@ -10,6 +10,7 @@ import {
 	accounts,
 	tokens,
 	generations,
+	genders,
 	series as seriesModule,
 } from './modules'
 
@@ -31,20 +32,32 @@ export function handleTransfer(event: TransferEvent): void {
 
 export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let tokenId = event.params.id.toHex()
+
 	let generationName = event.params.generation.tohex()
+	let generationId = generations.helpers.getGenerationId(generationName)
+
 	let seriesName = event.params.series.toHex()
+	let seriesId = seriesModule.helpers.getSeriesId(seriesName)
+
+	let genderName = event.params.series.toHex()
+	let genderId = genders.helpers.getGenderId(genderName)
+
 	let avastar = tokens.mintAvastar(
 		tokenId,
 		event.params.serial,
-		generationName,
-		seriesName
+		generationId,
+		seriesId,
+		genderId
 	)
 	avastar.save()
 
-	let generation = generations.increaseGenerationMinted(generationName)
+	let generation = generations.increaseGenerationMinted(generationId, generationName)
 	generation.save()
 
-	let series = seriesModule.increaseSeriesMinted(seriesName)
+	let series = seriesModule.increaseSeriesMinted(seriesId, seriesName)
 	series.save()
+
+	let gender = genders.increaseGenderMinted(genderId, genderName)
+	gender.save()
 
 }

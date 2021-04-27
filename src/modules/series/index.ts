@@ -48,14 +48,10 @@ export namespace series {
 
 	}
 
-	export function getSeriesByName(name: string): Series {
-		let seriesId = helpers.getSeriesId(name)
-		let generation = helpers.getOrCreateSeries(seriesId, name)
-		return generation
-	}
 
-	export function increaseSeriesMinted(name: string): Series {
-		let generation = getSeriesByName(name)
+
+	export function increaseSeriesMinted(seriesId: string, name: string): Series {
+		let generation = helpers.getOrCreateSeries(seriesId, name)
 		generation.minted = generation.minted.plus(integer.ONE)
 		return generation
 	}
