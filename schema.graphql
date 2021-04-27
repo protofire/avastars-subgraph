@@ -21,6 +21,21 @@ enum GenderName {
     FEMALE
 }
 
+type GlobalState @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Current teleporter contract address"
+	avastarTeleporter: Bytes
+
+	"Current series name"
+	currentSeries: Series 
+
+	"Current generation name"
+	currentGeneration: Generation 
+
+}
+
 type Generation @entity {
 	"generation entity id"
 	id: ID!
@@ -140,7 +155,7 @@ type Account @entity {
 }
 
 type Avastar @entity {
-	"avastar entity id"
+	"Internal ID used for indexation"
 	id: ID!
 
 	"current avastar serial"

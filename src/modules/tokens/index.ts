@@ -24,14 +24,16 @@ export namespace tokens {
 		return avastar
 	}
 	export function mintAvastar(
-		tokenId: string, serial: BigInt, generation: string, series: string
-		gender: string,
+		tokenId: string, serial: BigInt, generation: string,
+		series: string, gender: string, traitsId: string
 	): Avastar {
 		let avastar = loadAvastar(tokenId)
 		avastar.serial = serial
-		avastar.generation = generations.helpers.getGenerationId(generation)
-		avastar.series = seriesModule.helpers.getSeriesId(series)
-		avastar.series = seriesModule.helpers.getSeriesId(series)
+		avastar.generation = generation
+		avastar.series = series
+		avastar.gender = gender
+		avastar.traits = traitsId
+
 		return avastar
 	}
 }

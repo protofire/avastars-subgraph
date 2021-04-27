@@ -1,18 +1,20 @@
+
+import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
+import { Bytes } from '@graphprotocol/graph-ts'
+
 import {
 	NewPrime as NewPrimeEvent,
 	Transfer as TransferEvent
-} from '../generated/AvastarTeleporter/AvastarTeleporter'
+} from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
-import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
-
-import { Bytes } from '@graphprotocol/graph-ts'
 import {
 	accounts,
 	tokens,
 	generations,
 	genders,
 	series as seriesModule,
-} from './modules'
+} from '../modules'
+
 
 function handleMint(to: Bytes, tokenId: string): void {
 	let account = accounts.getAccount(to)
@@ -42,12 +44,15 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let genderName = event.params.series.toHex()
 	let genderId = genders.helpers.getGenderId(genderName)
 
+	let traitsId = event.params.series.toHex()
+
 	let avastar = tokens.mintAvastar(
 		tokenId,
 		event.params.serial,
 		generationId,
 		seriesId,
-		genderId
+		genderId,
+		traitsId
 	)
 	avastar.save()
 
