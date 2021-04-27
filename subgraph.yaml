@@ -1,0 +1,24 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: AvastarPrimeMinter
+    network: mainnet
+    source:
+      address: "0xe31763aad9294f073ddf18b36503ed037ae5e737"
+      abi: AvastarPrimeMinter
+      startBlock: 9433002
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Account
+      abis:
+        - name: AvastarPrimeMinter
+          file: ./abis/AvastarPrimeMinter.json
+      eventHandlers:
+        - event: CurrentGenerationSet(uint8)
+          handler: handleCurrentGenerationSet
+      file: ./src/mapping.ts
