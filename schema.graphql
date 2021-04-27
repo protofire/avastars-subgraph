@@ -31,6 +31,8 @@ type Generation @entity {
 	"avastars from this generation"
 	avastars: [Avastar!]! @derivedFrom(field: "generation")
 
+	minted: BigInt!
+
 }
 
 type Series @entity {
@@ -134,20 +136,20 @@ type Avastar @entity {
 	id: ID!
 
 	"current avastar serial"
-	serial: BigInt!
+	serial: BigInt
 
 	"avastar generation"
-	generation: Generation!
+	generation: Generation
 
 	"avastar series"
-	series: SeriesName!
+	series: Series
 
 	"avastars gender"
-	gender: Gender!
+	gender: Gender
 
 	# This will be kept as the id only to avoid contract calls as traits are stored on chain 
 	"Traits related to the avastar"
-	traits: String!
+	traits: String
 
 	# will be get at Transfer event from address 0
 	"avastar's current owner"
