@@ -6,7 +6,12 @@ import {
 import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
 
 import { Bytes } from '@graphprotocol/graph-ts'
-import { accounts, tokens, generations } from './modules'
+import {
+	accounts,
+	tokens,
+	generations,
+	series as seriesModule,
+} from './modules'
 
 function handleMint(to: Bytes, tokenId: string): void {
 	let account = accounts.getAccount(to)
@@ -27,15 +32,19 @@ export function handleTransfer(event: TransferEvent): void {
 export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let tokenId = event.params.id.toHex()
 	let generationName = event.params.generation.tohex()
-
+	let seriesName = event.params.series.toHex()
 	let avastar = tokens.mintAvastar(
 		tokenId,
 		event.params.serial,
-		generationName
+		generationName,
+		seriesName
 	)
 	avastar.save()
 
 	let generation = generations.increaseGenerationMinted(generationName)
 	generation.save()
+
+	let series = seriesModule.increaseSeriesMinted(seriesName)
+	series.save()
 
 }

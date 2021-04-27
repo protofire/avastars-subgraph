@@ -31,6 +31,7 @@ type Generation @entity {
 	"avastars from this generation"
 	avastars: [Avastar!]! @derivedFrom(field: "generation")
 
+	"avastars minted on this generation"
 	minted: BigInt!
 
 }
@@ -44,6 +45,10 @@ type Series @entity {
 
 	"avastars from this series"
 	avastars: [Avastar!]! @derivedFrom(field: "series")
+
+	"avastars minted on this series"
+	minted: BigInt!
+
 }
 
 type Gender @entity {
@@ -55,6 +60,9 @@ type Gender @entity {
 
 	"avastars from this series"
 	avastars: [Avastar!]! @derivedFrom(field: "gender")
+
+	"avastars minted for this gender"
+	minted: BigInt!
 }
 
 

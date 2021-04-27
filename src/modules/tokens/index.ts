@@ -1,6 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts'
 import { Avastar } from "../../../generated/schema";
-import { shared, generations } from "../index";
+import { shared, generations, series as seriesModule } from "../index";
 
 export namespace tokens {
 	export function getNewAvastar(tokenId: string, accountId: string): Avastar {
@@ -24,11 +24,12 @@ export namespace tokens {
 		return avastar
 	}
 	export function mintAvastar(
-		tokenId: string, serial: BigInt, generation: string
+		tokenId: string, serial: BigInt, generation: string, series: string
 	): Avastar {
 		let avastar = loadAvastar(tokenId)
 		avastar.serial = serial
 		avastar.generation = generations.helpers.getGenerationId(generation)
+		avastar.series = seriesModule.helpers.getSeriesId(series)
 		return avastar
 	}
 }
