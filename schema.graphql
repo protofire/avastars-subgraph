@@ -1,3 +1,180 @@
-type Generation @entity {
+enum GenerationName {
+	ONE,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE
+}
+
+enum SeriesName {
+    PROMO,
+    ONE,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE
+}
+
+enum GenderName {
+    ANY,
+    MALE,
+    FEMALE
+}
+
+type GlobalState @entity {
+	"Internal ID used for indexation"
 	id: ID!
+
+	"Current teleporter contract address"
+	avastarTeleporter: Bytes
+
+	"Current series name"
+	currentSeries: Series 
+
+	"Current generation name"
+	currentGeneration: Generation 
+
+}
+
+type Generation @entity {
+	"generation entity id"
+	id: ID!
+
+	"current generation name (1 to 5)"
+	name: GenerationName
+
+	"avastars from this generation"
+	avastars: [Avastar!]! @derivedFrom(field: "generation")
+
+	"avastars minted on this generation"
+	minted: BigInt!
+
+}
+
+type Series @entity {
+	"series entity id"
+	id: ID!
+
+	"current series name ( promo or 1 to 5)"
+	name: SeriesName
+
+	"avastars from this series"
+	avastars: [Avastar!]! @derivedFrom(field: "series")
+
+	"avastars minted on this series"
+	minted: BigInt!
+
+}
+
+type Gender @entity {
+	"gender entity id"
+	id: ID!
+
+	"current gender name (any or female or male)"
+	name: GenderName
+
+	"avastars from this series"
+	avastars: [Avastar!]! @derivedFrom(field: "gender")
+
+	"avastars minted for this gender"
+	minted: BigInt!
+}
+
+
+enum TranasctionType { 
+	MINT 
+ }
+
+
+interface Transaction {
+ 	"Internal ID used for indexation"
+	id: ID!
+
+	"Seller account"
+	from: Account
+
+	"Buyer account"
+	to: Account
+
+	"Avastar traded"
+	token: Avastar
+
+	"Amount of tokens or ether"
+	amount: BigInt
+
+	"Transaction creation timestamp"
+	timestamp: BigInt!
+
+	"Current transaction type"
+	type: TranasctionType!
+}
+
+
+type Mint implements Transaction @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Seller account"
+	from: Account
+
+	"Buyer account"
+	to: Account
+
+	"Avastar traded"
+	token: Avastar
+
+	"Amount of tokens or ether"
+	amount: BigInt
+
+	"Transaction creation timestamp"
+	timestamp: BigInt!
+
+	"Current transaction type"
+	type: TranasctionType!
+}
+
+
+type Account @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Account evm address"
+	address: Bytes
+
+	"owned avastars"
+	avastars: [Avastar!]! @derivedFrom(field: "owner")
+	
+	"Transactions sent by this account"
+	sent: [Transaction!] @derivedFrom(field: "from")
+ 
+	"Transactions recieved by this account"
+	recieved: [Transaction!] @derivedFrom(field: "to")
+
+	"ath recieved as form of token burning"
+	ethBalance: BigInt!
+}
+
+type Avastar @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"current avastar serial"
+	serial: BigInt
+
+	"avastar generation"
+	generation: Generation
+
+	"avastar series"
+	series: Series
+
+	"avastars gender"
+	gender: Gender
+
+	# This will be kept as the id only to avoid contract calls as traits are stored on chain 
+	"Traits related to the avastar"
+	traits: String
+
+	# will be get at Transfer event from address 0
+	"avastar's current owner"
+	owner: Account!
 }

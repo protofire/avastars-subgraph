@@ -21,4 +21,30 @@ dataSources:
       eventHandlers:
         - event: CurrentGenerationSet(uint8)
           handler: handleCurrentGenerationSet
-      file: ./src/mapping.ts
+        - event: CurrentSeriesSet(uint8)
+          handler: handleCurrentSeriesSet
+        - event: TeleporterContractSet(address)
+          handler: handleTeleporterContractSet
+      file: ./src/mapping/avastarPrimeMinter.ts
+  - kind: ethereum/contract
+    name: AvastarTeleporter
+    network: mainnet
+    source:
+      address: "0xf3e778f839934fc819cfa1040aabacecba01e049"
+      abi: AvastarTeleporter
+      startBlock: 9432995
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Account
+      abis:
+        - name: AvastarTeleporter
+          file: ./abis/AvastarTeleporter.json
+      eventHandlers:
+        - event: NewPrime(uint256,uint256,uint8,uint8,uint8,uint256)
+          handler: handleMintNewPrime
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/mapping/avastarTeleporter.ts
