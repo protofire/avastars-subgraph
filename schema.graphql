@@ -214,7 +214,7 @@ type Avastar @entity {
 
 	# This will be kept as the id only to avoid contract calls as traits are stored on chain 
 	"Traits related to the avastar"
-	traits: String
+	traits: Trait
 
 	# will be get at Transfer event from address 0
 	"avastar's current owner"
