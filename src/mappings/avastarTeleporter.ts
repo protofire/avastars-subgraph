@@ -1,6 +1,6 @@
 
 import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
-import { BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { Bytes } from '@graphprotocol/graph-ts'
 
 import {
 	NewPrime as NewPrimeEvent,
@@ -10,6 +10,7 @@ import {
 import {
 	accounts,
 	tokens,
+	traits,
 	generations,
 	genders,
 	series as seriesModule,
@@ -45,7 +46,10 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let genderName = shared.helpers.i32Tohex(event.params.series)
 	let genderId = genders.helpers.getGenderId(genderName)
 
-	let traitsId = event.params.traits.toHex()
+	let traitsId = event.params.traits
+
+	let trait = traits.getTraitById(traitsId, event.address)
+	trait.save()
 
 	let avastar = tokens.mintAvastar(
 		tokenId,
@@ -53,7 +57,7 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 		generationId,
 		seriesId,
 		genderId,
-		traitsId
+		traitsId.toHex()
 	)
 	avastar.save()
 

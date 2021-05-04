@@ -1,4 +1,3 @@
-import { BigInt } from '@graphprotocol/graph-ts'
 import {
 	CurrentGenerationSet as CurrentGenerationSetEvent,
 	CurrentSeriesSet as CurrentSeriesSetEvent,
