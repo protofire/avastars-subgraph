@@ -12,25 +12,25 @@ export namespace global {
 		if (globalState == null) {
 			globalState = new GlobalState(constants.GLOBAL_STATE_ID)
 		}
-		return globalState
+		return globalState as GlobalState
 	}
 
 	export function setGeneration(generationId: string): GlobalState {
 		let globalState = getGlobalState()
 		globalState.currentGeneration = generationId
-		return globalState
+		return globalState as GlobalState
 	}
 
 	export function setSeries(seriesId: string): GlobalState {
 		let globalState = getGlobalState()
 		globalState.currentSeries = seriesId
-		return globalState
+		return globalState as GlobalState
 	}
 
 	export function setAvastarTeleporter(teleporterAddress: Bytes): GlobalState {
 		let globalState = getGlobalState()
 		globalState.avastarTeleporter = teleporterAddress
-		return globalState
+		return globalState as GlobalState
 	}
 
 }

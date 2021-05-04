@@ -4,12 +4,12 @@ import { shared } from "../shared"
 
 export namespace series {
 	export namespace constants {
-		export let SERIES_PROMO = "PROMO"
-		export let SERIES_ONE = "ONE"
-		export let SERIES_TWO = "TWO"
-		export let SERIES_THREE = "THREE"
-		export let SERIES_FOUR = "FOUR"
-		export let SERIES_FIVE = "FIVE"
+		export let SERIES_PROMO = "0x0"
+		export let SERIES_ONE = "0x1"
+		export let SERIES_TWO = "0x2"
+		export let SERIES_THREE = "0x3"
+		export let SERIES_FOUR = "0x4"
+		export let SERIES_FIVE = "0x5"
 
 
 		export let SERIES_IDS = new Map<string, string>()
@@ -27,22 +27,26 @@ export namespace series {
 			let seriesId: string | null = constants.SERIES_IDS.has(name) ?
 				constants.SERIES_IDS.get(name) : null
 			if (seriesId == null) {
-				shared.logs.logCritical(
+				shared.logs.logInfo(
 					"getSeriesId",
 					"Coulnd't find id for name: " + name
 				)
+				// shared.logs.logCritical(
+				// 	"getSeriesId",
+				// 	"Coulnd't find id for name: " + name
+				// )
 			}
-			return seriesId
+			return name
 		}
 
 		export function getOrCreateSeries(seriesId: string, name: string): Series {
-			let generation = Series.load(seriesId)
-			if (generation == null) {
-				generation = new Series(seriesId)
-				generation.name = name
-				generation.minted = integer.ZERO
+			let series = Series.load(seriesId)
+			if (series == null) {
+				series = new Series(seriesId)
+				series.name = name
+				series.minted = integer.ZERO
 			}
-			return generation
+			return series as Series
 
 		}
 
@@ -51,8 +55,8 @@ export namespace series {
 
 
 	export function increaseSeriesMinted(seriesId: string, name: string): Series {
-		let generation = helpers.getOrCreateSeries(seriesId, name)
-		generation.minted = generation.minted.plus(integer.ONE)
-		return generation
+		let series = helpers.getOrCreateSeries(seriesId, name)
+		series.minted = series.minted.plus(integer.ONE)
+		return series as Series
 	}
 }

@@ -25,7 +25,7 @@ dataSources:
           handler: handleCurrentSeriesSet
         - event: TeleporterContractSet(address)
           handler: handleTeleporterContractSet
-      file: ./src/mapping/avastarPrimeMinter.ts
+      file: ./src/mappings/avastarPrimeMinter.ts
   - kind: ethereum/contract
     name: AvastarTeleporter
     network: mainnet
@@ -47,4 +47,4 @@ dataSources:
           handler: handleMintNewPrime
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/mapping/avastarTeleporter.ts
+      file: ./src/mappings/avastarTeleporter.ts

@@ -41,7 +41,7 @@ type Generation @entity {
 	id: ID!
 
 	"current generation name (1 to 5)"
-	name: GenerationName
+	name: String # GenerationName
 
 	"avastars from this generation"
 	avastars: [Avastar!]! @derivedFrom(field: "generation")
@@ -56,7 +56,7 @@ type Series @entity {
 	id: ID!
 
 	"current series name ( promo or 1 to 5)"
-	name: SeriesName
+	name: String # SeriesName
 
 	"avastars from this series"
 	avastars: [Avastar!]! @derivedFrom(field: "series")
@@ -71,7 +71,7 @@ type Gender @entity {
 	id: ID!
 
 	"current gender name (any or female or male)"
-	name: GenderName
+	name: String # GenderName
 
 	"avastars from this series"
 	avastars: [Avastar!]! @derivedFrom(field: "gender")

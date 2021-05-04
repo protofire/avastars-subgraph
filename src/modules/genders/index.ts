@@ -20,12 +20,12 @@ export namespace genders {
 			let genderId: string | null = constants.GENDER_IDS.has(name) ?
 				constants.GENDER_IDS.get(name) : null
 			if (genderId == null) {
-				shared.logs.logCritical(
+				shared.logs.logInfo(
 					"getGenderByName",
 					"Coulnd't find id for name: " + name
 				)
 			}
-			return genderId
+			return name
 		}
 
 		export function getOrCreateGender(genderId: string, name: string): Gender {
@@ -35,7 +35,7 @@ export namespace genders {
 				gender.name = name
 				gender.minted = integer.ZERO
 			}
-			return gender
+			return gender as Gender
 
 		}
 
@@ -44,6 +44,6 @@ export namespace genders {
 	export function increaseGenderMinted(genderId: string, name: string): Gender {
 		let gender = helpers.getOrCreateGender(genderId, name)
 		gender.minted = gender.minted.plus(integer.ONE)
-		return gender
+		return gender as Gender
 	}
 }

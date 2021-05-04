@@ -1,3 +1,4 @@
+import { BigInt } from '@graphprotocol/graph-ts'
 import {
 	CurrentGenerationSet as CurrentGenerationSetEvent,
 	CurrentSeriesSet as CurrentSeriesSetEvent,
@@ -7,23 +8,24 @@ import {
 import {
 	global,
 	generations,
-	series as seriesModule
+	series as seriesModule,
+	shared
 } from '../modules'
 
 
-export function handleTeleporterContractSet(event: TeleporterContractSetEvent) {
+export function handleTeleporterContractSet(event: TeleporterContractSetEvent): void {
 	let globalState = global.setAvastarTeleporter(event.params.contractAddress)
 	globalState.save()
 }
 
-export function handleCurrentGenerationSet(event: CurrentGenerationSetEvent) {
-	let generationId = generations.helpers.getGenerationId(event.params.currentGeneration.toHex())
+export function handleCurrentGenerationSet(event: CurrentGenerationSetEvent): void {
+	let generationId = generations.helpers.getGenerationId(shared.helpers.i32Tohex(event.params.currentGeneration))
 	let globalState = global.setGeneration(generationId)
 	globalState.save()
 }
 
-export function handleCurrentSeriesSetEvent(event: CurrentSeriesSetEvent) {
-	let seriesId = seriesModule.helpers.getSeriesId(event.params.currentSeries.toHex())
+export function handleCurrentSeriesSet(event: CurrentSeriesSetEvent): void {
+	let seriesId = seriesModule.helpers.getSeriesId(shared.helpers.i32Tohex(event.params.currentSeries))
 	let globalState = global.setSeries(seriesId)
 	globalState.save()
 }

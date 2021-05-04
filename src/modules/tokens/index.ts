@@ -9,7 +9,7 @@ export namespace tokens {
 			avastar = new Avastar(tokenId)
 			avastar.owner = accountId
 		}
-		return avastar
+		return avastar as Avastar
 	}
 	export function loadAvastar(tokenId: string): Avastar {
 		let avastar = Avastar.load(tokenId)
@@ -19,9 +19,9 @@ export namespace tokens {
 				"loadAvastar",
 				"Couldn't find avastar w/ id: " + tokenId)
 			// by this point indexing would be already stopped
-			return avastar as Avastar
+			return avastar as Avastar as Avastar
 		}
-		return avastar
+		return avastar as Avastar
 	}
 	export function mintAvastar(
 		tokenId: string, serial: BigInt, generation: string,
@@ -34,6 +34,6 @@ export namespace tokens {
 		avastar.gender = gender
 		avastar.traits = traitsId
 
-		return avastar
+		return avastar as Avastar
 	}
 }

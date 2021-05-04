@@ -1,6 +1,6 @@
 
 import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
-import { Bytes } from '@graphprotocol/graph-ts'
+import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 
 import {
 	NewPrime as NewPrimeEvent,
@@ -13,6 +13,7 @@ import {
 	generations,
 	genders,
 	series as seriesModule,
+	shared
 } from '../modules'
 
 
@@ -27,7 +28,7 @@ export function handleTransfer(event: TransferEvent): void {
 	let from = event.params.from.toHex()
 	let tokenId = event.params.tokenId.toHex()
 	if (from == ADDRESS_ZERO) {
-		return handleMint(event.params.to, tokenId)
+		handleMint(event.params.to, tokenId)
 	}
 
 }
@@ -35,16 +36,16 @@ export function handleTransfer(event: TransferEvent): void {
 export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let tokenId = event.params.id.toHex()
 
-	let generationName = event.params.generation.tohex()
+	let generationName = shared.helpers.i32Tohex(event.params.generation)
 	let generationId = generations.helpers.getGenerationId(generationName)
 
-	let seriesName = event.params.series.toHex()
+	let seriesName = shared.helpers.i32Tohex(event.params.series)
 	let seriesId = seriesModule.helpers.getSeriesId(seriesName)
 
-	let genderName = event.params.series.toHex()
+	let genderName = shared.helpers.i32Tohex(event.params.series)
 	let genderId = genders.helpers.getGenderId(genderName)
 
-	let traitsId = event.params.series.toHex()
+	let traitsId = event.params.traits.toHex()
 
 	let avastar = tokens.mintAvastar(
 		tokenId,
