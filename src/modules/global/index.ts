@@ -27,9 +27,14 @@ export namespace global {
 		return globalState as GlobalState
 	}
 
-	export function setAvastarTeleporter(teleporterAddress: Bytes): GlobalState {
+	export function setAvastarTeleporterAddress(address: Bytes): GlobalState {
 		let globalState = getGlobalState()
-		globalState.avastarTeleporter = teleporterAddress
+		globalState.avastarTeleporterAddress = address
+		return globalState as GlobalState
+	}
+	export function setAvastarprimeMinterAddress(address: Bytes): GlobalState {
+		let globalState = getGlobalState()
+		globalState.avastarPrimeMinterAddress = address
 		return globalState as GlobalState
 	}
 

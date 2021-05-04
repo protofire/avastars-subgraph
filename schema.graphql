@@ -26,7 +26,10 @@ type GlobalState @entity {
 	id: ID!
 
 	"Current teleporter contract address"
-	avastarTeleporter: Bytes
+	avastarTeleporterAddress: Bytes
+
+	"Current teleporter contract address"
+	avastarPrimeMinterAddress: Bytes
 
 	"Current series name"
 	currentSeries: Series 

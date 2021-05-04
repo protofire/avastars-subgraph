@@ -1,4 +1,5 @@
 import {
+	ContractUpgrade as ContractUpgradeEvent,
 	CurrentGenerationSet as CurrentGenerationSetEvent,
 	CurrentSeriesSet as CurrentSeriesSetEvent,
 	TeleporterContractSet as TeleporterContractSetEvent
@@ -13,7 +14,7 @@ import {
 
 
 export function handleTeleporterContractSet(event: TeleporterContractSetEvent): void {
-	let globalState = global.setAvastarTeleporter(event.params.contractAddress)
+	let globalState = global.setAvastarTeleporterAddress(event.params.contractAddress)
 	globalState.save()
 }
 
@@ -26,5 +27,10 @@ export function handleCurrentGenerationSet(event: CurrentGenerationSetEvent): vo
 export function handleCurrentSeriesSet(event: CurrentSeriesSetEvent): void {
 	let seriesId = seriesModule.helpers.getSeriesId(shared.helpers.i32Tohex(event.params.currentSeries))
 	let globalState = global.setSeries(seriesId)
+	globalState.save()
+}
+
+export function handleContractUpgrade(event: ContractUpgradeEvent): void {
+	let globalState = global.setAvastarTeleporterAddress(event.params.newContract)
 	globalState.save()
 }
