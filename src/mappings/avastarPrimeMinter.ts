@@ -4,6 +4,7 @@ import {
 	CurrentSeriesSet as CurrentSeriesSetEvent,
 	TeleporterContractSet as TeleporterContractSetEvent
 } from '../../generated/AvastarPrimeMinter/AvastarPrimeMinter'
+import { ContractPaused, ContractUnpaused } from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
 import {
 	global,
@@ -35,12 +36,12 @@ export function handleContractUpgrade(event: ContractUpgradeEvent): void {
 	primeMinterState.save()
 }
 
-export function handleContractPaused(): void {
+export function handleContractPaused(event: ContractPaused): void {
 	let primeMinterState = global.primeMinter.setPaused(true)
 	primeMinterState.save()
 }
 
-export function handleContractUnpaused(): void {
+export function handleContractUnpaused(event: ContractUnpaused): void {
 	let primeMinterState = global.primeMinter.setPaused(true)
 	primeMinterState.save()
 }

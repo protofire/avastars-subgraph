@@ -3,6 +3,8 @@ import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
 import { Bytes } from '@graphprotocol/graph-ts'
 
 import {
+	ContractPaused,
+	ContractUnpaused,
 	ContractUpgrade as ContractUpgradeEvent,
 	NewPrime as NewPrimeEvent,
 	Transfer as TransferEvent
@@ -73,17 +75,22 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 
 }
 
+export function handleMetadataContractAddressSet(event: ContractUpgradeEvent): void {
+	let metadataState = global.metadata.setAddress(event.params.newContract)
+	metadataState.save()
+}
+
 export function handleContractUpgrade(event: ContractUpgradeEvent): void {
 	let teleporterState = global.teleporter.setAddress(event.params.newContract)
 	teleporterState.save()
 }
 
-export function handleContractPaused(): void {
+export function handleContractPaused(event: ContractPaused): void {
 	let teleporterState = global.teleporter.setPaused(true)
 	teleporterState.save()
 }
 
-export function handleContractUnpaused(): void {
+export function handleContractUnpaused(event: ContractUnpaused): void {
 	let teleporterState = global.teleporter.setPaused(true)
 	teleporterState.save()
 }

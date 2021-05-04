@@ -21,6 +21,14 @@ enum GenderName {
     FEMALE
 }
 
+type MetadataState @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Current metadata contract address"
+	address: Bytes
+}
+
 type TeleporterState @entity {
 	"Internal ID used for indexation"
 	id: ID!
@@ -52,6 +60,9 @@ type GlobalState @entity {
 
 	"AvastarsTeleporter current state"
 	teleporter: TeleporterState! 
+
+	"AvastarsMetadata current state"
+	metadata: MetadataState! 
 
 	"Current series name"
 	currentSeries: Series 

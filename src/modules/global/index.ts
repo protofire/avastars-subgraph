@@ -1,5 +1,10 @@
 import { Bytes } from "@graphprotocol/graph-ts";
-import { GlobalState, TeleporterState, PrimeMinterState } from "../../../generated/schema";
+import {
+	GlobalState,
+	TeleporterState,
+	PrimeMinterState,
+	MetadataState
+} from "../../../generated/schema";
 
 export namespace global {
 
@@ -7,70 +12,87 @@ export namespace global {
 		export let GLOBAL_STATE_ID = "0xgbs0"
 		export let TELEPORTER_STATE_ID = "0xgbs1"
 		export let PRIME_MINTER_STATE_ID = "0xgbs2"
+		export let METADATA_STATE_ID = "0xgbs3"
 	}
 
 	export function getGlobalState(): GlobalState {
-		let globalState = GlobalState.load(constants.GLOBAL_STATE_ID)
-		if (globalState == null) {
-			globalState = new GlobalState(constants.GLOBAL_STATE_ID)
+		let state = GlobalState.load(constants.GLOBAL_STATE_ID)
+		if (state == null) {
+			state = new GlobalState(constants.GLOBAL_STATE_ID)
 		}
-		return globalState as GlobalState
+		return state as GlobalState
 	}
 
 	export function setGeneration(generationId: string): GlobalState {
-		let globalState = getGlobalState()
-		globalState.currentGeneration = generationId
-		globalState.teleporter = constants.TELEPORTER_STATE_ID
-		globalState.primeMinter = constants.PRIME_MINTER_STATE_ID
-		return globalState as GlobalState
+		let state = getGlobalState()
+		state.currentGeneration = generationId
+		state.teleporter = constants.TELEPORTER_STATE_ID
+		state.primeMinter = constants.PRIME_MINTER_STATE_ID
+		state.metadata = constants.METADATA_STATE_ID
+		return state as GlobalState
 	}
 
 	export function setSeries(seriesId: string): GlobalState {
-		let globalState = getGlobalState()
-		globalState.currentSeries = seriesId
-		return globalState as GlobalState
+		let state = getGlobalState()
+		state.currentSeries = seriesId
+		return state as GlobalState
 	}
 	export namespace teleporter {
 
 		export function getTeleporterState(): TeleporterState {
-			let teleporterState = TeleporterState.load(constants.TELEPORTER_STATE_ID)
-			if (teleporterState == null) {
-				teleporterState = new TeleporterState(constants.TELEPORTER_STATE_ID)
+			let state = TeleporterState.load(constants.TELEPORTER_STATE_ID)
+			if (state == null) {
+				state = new TeleporterState(constants.TELEPORTER_STATE_ID)
 			}
-			return teleporterState as TeleporterState
+			return state as TeleporterState
 		}
 		export function setAddress(address: Bytes): TeleporterState {
-			let teleporterState = getTeleporterState()
-			teleporterState.address = address
-			return teleporterState as TeleporterState
+			let state = getTeleporterState()
+			state.address = address
+			return state as TeleporterState
 		}
 		export function setPaused(paused: boolean): TeleporterState {
-			let teleporterState = getTeleporterState()
-			teleporterState.paused = paused
-			return teleporterState as TeleporterState
+			let state = getTeleporterState()
+			state.paused = paused
+			return state as TeleporterState
 		}
 
 	}
 	export namespace primeMinter {
 
 		export function getPrimeMinterState(): PrimeMinterState {
-			let primeMinterState = PrimeMinterState.load(constants.PRIME_MINTER_STATE_ID)
-			if (primeMinterState == null) {
-				primeMinterState = new PrimeMinterState(constants.PRIME_MINTER_STATE_ID)
+			let state = PrimeMinterState.load(constants.PRIME_MINTER_STATE_ID)
+			if (state == null) {
+				state = new PrimeMinterState(constants.PRIME_MINTER_STATE_ID)
 			}
-			return primeMinterState as PrimeMinterState
+			return state as PrimeMinterState
 		}
 		export function setAddress(address: Bytes): PrimeMinterState {
-			let primeMinterState = getPrimeMinterState()
-			primeMinterState.address = address
-			return primeMinterState as PrimeMinterState
+			let state = getPrimeMinterState()
+			state.address = address
+			return state as PrimeMinterState
 		}
 		export function setPaused(paused: boolean): PrimeMinterState {
-			let primeMinterState = getPrimeMinterState()
-			primeMinterState.paused = paused
-			return primeMinterState as PrimeMinterState
+			let state = getPrimeMinterState()
+			state.paused = paused
+			return state as PrimeMinterState
 		}
 
+	}
+	export namespace metadata {
+
+		export function getMetadataState(): MetadataState {
+			let state = MetadataState.load(constants.METADATA_STATE_ID)
+			if (state == null) {
+				state = new MetadataState(constants.METADATA_STATE_ID)
+			}
+			return state as MetadataState
+		}
+		export function setAddress(address: Bytes): MetadataState {
+			let state = getMetadataState()
+			state.address = address
+			return state as MetadataState
+		}
 	}
 
 }

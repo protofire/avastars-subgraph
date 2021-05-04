@@ -49,6 +49,8 @@ dataSources:
         - name: AvastarTeleporter
           file: ./abis/AvastarTeleporter.json
       eventHandlers:
+        - event: MetadataContractAddressSet(address)
+          handler: handleMetadataContractAddressSet
         - event: ContractUnpaused()
           handler: handleContractUnpaused
         - event: ContractPaused()
