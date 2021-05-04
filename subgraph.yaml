@@ -49,6 +49,12 @@ dataSources:
         - name: AvastarTeleporter
           file: ./abis/AvastarTeleporter.json
       eventHandlers:
+        - event: ContractUnpaused()
+          handler: handleContractUnpaused
+        - event: ContractPaused()
+          handler: handleContractPaused
+        - event: ContractUpgrade(address)
+          handler: handleContractUpgrade
         - event: NewPrime(uint256,uint256,uint8,uint8,uint8,uint256)
           handler: handleMintNewPrime
         - event: Transfer(indexed address,indexed address,indexed uint256)

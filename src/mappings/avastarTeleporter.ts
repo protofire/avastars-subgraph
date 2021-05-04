@@ -3,18 +3,20 @@ import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
 import { Bytes } from '@graphprotocol/graph-ts'
 
 import {
+	ContractUpgrade as ContractUpgradeEvent,
 	NewPrime as NewPrimeEvent,
 	Transfer as TransferEvent
 } from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
 import {
 	accounts,
-	tokens,
-	traits,
+	global,
 	generations,
 	genders,
 	series as seriesModule,
-	shared
+	shared,
+	tokens,
+	traits,
 } from '../modules'
 
 
@@ -69,4 +71,19 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let gender = genders.increaseGenderMinted(genderId)
 	gender.save()
 
+}
+
+export function handleContractUpgrade(event: ContractUpgradeEvent): void {
+	let teleporterState = global.teleporter.setAddress(event.params.newContract)
+	teleporterState.save()
+}
+
+export function handleContractPaused(): void {
+	let teleporterState = global.teleporter.setPaused(true)
+	teleporterState.save()
+}
+
+export function handleContractUnpaused(): void {
+	let teleporterState = global.teleporter.setPaused(true)
+	teleporterState.save()
 }
