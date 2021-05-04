@@ -28,8 +28,11 @@ type GlobalState @entity {
 	"Current teleporter contract address"
 	avastarTeleporterAddress: Bytes
 
-	"Current teleporter contract address"
+	"Current prime minter contract address"
 	avastarPrimeMinterAddress: Bytes
+
+	"Current prime minter contract status"
+	avastarPrimeMinterPaused: Boolean
 
 	"Current series name"
 	currentSeries: Series 

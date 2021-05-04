@@ -19,6 +19,12 @@ dataSources:
         - name: AvastarPrimeMinter
           file: ./abis/AvastarPrimeMinter.json
       eventHandlers:
+        - event: ContractUnpaused()
+          handler: handleContractUnpaused()
+        - event: ContractPaused()
+          handler: handleContractPaused()
+        - event: ContractUpgrade(address)
+          handler: handleContractUpgrade
         - event: CurrentGenerationSet(uint8)
           handler: handleCurrentGenerationSet
         - event: CurrentSeriesSet(uint8)

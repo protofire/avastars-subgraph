@@ -34,3 +34,14 @@ export function handleContractUpgrade(event: ContractUpgradeEvent): void {
 	let globalState = global.setAvastarTeleporterAddress(event.params.newContract)
 	globalState.save()
 }
+
+export function handleContractPaused(): void {
+	let globalState = global.setPaused(true)
+	globalState.save()
+}
+
+export function handleContractUnpaused(): void {
+	let globalState = global.setPaused(false)
+	globalState.save()
+}
+

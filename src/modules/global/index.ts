@@ -32,10 +32,16 @@ export namespace global {
 		globalState.avastarTeleporterAddress = address
 		return globalState as GlobalState
 	}
+
 	export function setAvastarprimeMinterAddress(address: Bytes): GlobalState {
 		let globalState = getGlobalState()
 		globalState.avastarPrimeMinterAddress = address
 		return globalState as GlobalState
 	}
 
+	export function setPaused(paused: boolean): GlobalState {
+		let globalState = getGlobalState()
+		globalState.avastarPrimeMinterPaused = paused
+		return globalState as GlobalState
+	}
 }
