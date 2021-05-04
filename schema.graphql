@@ -21,12 +21,48 @@ enum GenderName {
     FEMALE
 }
 
-type GlobalState @entity {
+type MetadataState @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Current metadata contract address"
+	address: Bytes
+}
+
+type TeleporterState @entity {
 	"Internal ID used for indexation"
 	id: ID!
 
 	"Current teleporter contract address"
-	avastarTeleporter: Bytes
+	address: Bytes
+
+	"Current teleporter contract status"
+	paused: Boolean
+}
+
+type PrimeMinterState @entity {
+	"Internal ID used for indexation"
+	id: ID!
+	
+	"Current prime minter contract address"
+	address: Bytes
+
+	"Current prime minter contract status"
+	paused: Boolean
+}
+
+type GlobalState @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"AvastarsPrimeMinter current state"
+	primeMinter: PrimeMinterState! 
+
+	"AvastarsTeleporter current state"
+	teleporter: TeleporterState! 
+
+	"AvastarsMetadata current state"
+	metadata: MetadataState! 
 
 	"Current series name"
 	currentSeries: Series 
@@ -37,11 +73,11 @@ type GlobalState @entity {
 }
 
 type Generation @entity {
-	"generation entity id"
+ 	"Internal ID used for indexation"
 	id: ID!
 
 	"current generation name (1 to 5)"
-	name: GenerationName
+	name: String # GenerationName
 
 	"avastars from this generation"
 	avastars: [Avastar!]! @derivedFrom(field: "generation")
@@ -49,14 +85,17 @@ type Generation @entity {
 	"avastars minted on this generation"
 	minted: BigInt!
 
+	"traits on this generation"
+	traits: [Trait!]! @derivedFrom(field: "generation")
+
 }
 
 type Series @entity {
-	"series entity id"
+ 	"Internal ID used for indexation"
 	id: ID!
 
 	"current series name ( promo or 1 to 5)"
-	name: SeriesName
+	name: String # SeriesName
 
 	"avastars from this series"
 	avastars: [Avastar!]! @derivedFrom(field: "series")
@@ -64,20 +103,53 @@ type Series @entity {
 	"avastars minted on this series"
 	minted: BigInt!
 
+	"trait which series belong to"
+	trait: Trait
+
 }
 
 type Gender @entity {
-	"gender entity id"
+ 	"Internal ID used for indexation"
 	id: ID!
 
 	"current gender name (any or female or male)"
-	name: GenderName
+	name: String # GenderName
 
 	"avastars from this series"
 	avastars: [Avastar!]! @derivedFrom(field: "gender")
 
 	"avastars minted for this gender"
 	minted: BigInt!
+
+	"traits with this gender"
+	traits: [Trait!]! @derivedFrom(field: "gender")
+
+}
+
+type Trait @entity {
+ 	"Internal ID used for indexation"
+	id: ID!
+
+	"Trait generation"
+	generation: Generation
+
+	"Trait gender"
+	gender: Gender
+
+	"Trait gene"
+	gene: String
+
+	"Trait ratiy level"
+	rarity: String
+
+	"Trait variation level"
+	variation: BigInt
+
+	"Series of the trait"
+	series: [Series!] @derivedFrom(field: "trait")
+ 
+	"Trait's svg url (?"
+	name: String
 }
 
 
@@ -172,7 +244,7 @@ type Avastar @entity {
 
 	# This will be kept as the id only to avoid contract calls as traits are stored on chain 
 	"Traits related to the avastar"
-	traits: String
+	traits: Trait
 
 	# will be get at Transfer event from address 0
 	"avastar's current owner"

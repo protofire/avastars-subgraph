@@ -3,16 +3,22 @@ import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
 import { Bytes } from '@graphprotocol/graph-ts'
 
 import {
+	ContractPaused,
+	ContractUnpaused,
+	ContractUpgrade as ContractUpgradeEvent,
 	NewPrime as NewPrimeEvent,
 	Transfer as TransferEvent
 } from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
 import {
 	accounts,
-	tokens,
+	global,
 	generations,
 	genders,
 	series as seriesModule,
+	shared,
+	tokens,
+	traits,
 } from '../modules'
 
 
@@ -27,7 +33,7 @@ export function handleTransfer(event: TransferEvent): void {
 	let from = event.params.from.toHex()
 	let tokenId = event.params.tokenId.toHex()
 	if (from == ADDRESS_ZERO) {
-		return handleMint(event.params.to, tokenId)
+		handleMint(event.params.to, tokenId)
 	}
 
 }
@@ -35,16 +41,18 @@ export function handleTransfer(event: TransferEvent): void {
 export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let tokenId = event.params.id.toHex()
 
-	let generationName = event.params.generation.tohex()
+	let generationName = shared.helpers.i32Tohex(event.params.generation)
 	let generationId = generations.helpers.getGenerationId(generationName)
 
-	let seriesName = event.params.series.toHex()
+	let seriesName = shared.helpers.i32Tohex(event.params.series)
 	let seriesId = seriesModule.helpers.getSeriesId(seriesName)
 
-	let genderName = event.params.series.toHex()
-	let genderId = genders.helpers.getGenderId(genderName)
+	let genderId = shared.helpers.i32Tohex(event.params.gender)
 
-	let traitsId = event.params.series.toHex()
+	let traitsId = event.params.traits
+
+	let trait = traits.getTraitById(traitsId, event.address)
+	trait.save()
 
 	let avastar = tokens.mintAvastar(
 		tokenId,
@@ -52,7 +60,7 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 		generationId,
 		seriesId,
 		genderId,
-		traitsId
+		traitsId.toHex()
 	)
 	avastar.save()
 
@@ -62,7 +70,27 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let series = seriesModule.increaseSeriesMinted(seriesId, seriesName)
 	series.save()
 
-	let gender = genders.increaseGenderMinted(genderId, genderName)
+	let gender = genders.increaseGenderMinted(genderId)
 	gender.save()
 
+}
+
+export function handleMetadataContractAddressSet(event: ContractUpgradeEvent): void {
+	let metadataState = global.metadata.setAddress(event.params.newContract)
+	metadataState.save()
+}
+
+export function handleContractUpgrade(event: ContractUpgradeEvent): void {
+	let teleporterState = global.teleporter.setAddress(event.params.newContract)
+	teleporterState.save()
+}
+
+export function handleContractPaused(event: ContractPaused): void {
+	let teleporterState = global.teleporter.setPaused(true)
+	teleporterState.save()
+}
+
+export function handleContractUnpaused(event: ContractUnpaused): void {
+	let teleporterState = global.teleporter.setPaused(true)
+	teleporterState.save()
 }

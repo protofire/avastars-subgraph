@@ -1,29 +1,48 @@
 import {
+	ContractUpgrade as ContractUpgradeEvent,
 	CurrentGenerationSet as CurrentGenerationSetEvent,
 	CurrentSeriesSet as CurrentSeriesSetEvent,
 	TeleporterContractSet as TeleporterContractSetEvent
 } from '../../generated/AvastarPrimeMinter/AvastarPrimeMinter'
+import { ContractPaused, ContractUnpaused } from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
 import {
 	global,
 	generations,
-	series as seriesModule
+	series as seriesModule,
+	shared
 } from '../modules'
 
 
-export function handleTeleporterContractSet(event: TeleporterContractSetEvent) {
-	let globalState = global.setAvastarTeleporter(event.params.contractAddress)
-	globalState.save()
-}
-
-export function handleCurrentGenerationSet(event: CurrentGenerationSetEvent) {
-	let generationId = generations.helpers.getGenerationId(event.params.currentGeneration.toHex())
+export function handleCurrentGenerationSet(event: CurrentGenerationSetEvent): void {
+	let generationId = generations.helpers.getGenerationId(shared.helpers.i32Tohex(event.params.currentGeneration))
 	let globalState = global.setGeneration(generationId)
 	globalState.save()
 }
 
-export function handleCurrentSeriesSetEvent(event: CurrentSeriesSetEvent) {
-	let seriesId = seriesModule.helpers.getSeriesId(event.params.currentSeries.toHex())
+export function handleCurrentSeriesSet(event: CurrentSeriesSetEvent): void {
+	let seriesId = seriesModule.helpers.getSeriesId(shared.helpers.i32Tohex(event.params.currentSeries))
 	let globalState = global.setSeries(seriesId)
 	globalState.save()
 }
+
+export function handleTeleporterContractSet(event: TeleporterContractSetEvent): void {
+	let teleporterState = global.teleporter.setAddress(event.params.contractAddress)
+	teleporterState.save()
+}
+
+export function handleContractUpgrade(event: ContractUpgradeEvent): void {
+	let primeMinterState = global.primeMinter.setAddress(event.params.newContract)
+	primeMinterState.save()
+}
+
+export function handleContractPaused(event: ContractPaused): void {
+	let primeMinterState = global.primeMinter.setPaused(true)
+	primeMinterState.save()
+}
+
+export function handleContractUnpaused(event: ContractUnpaused): void {
+	let primeMinterState = global.primeMinter.setPaused(true)
+	primeMinterState.save()
+}
+
