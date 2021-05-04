@@ -43,8 +43,7 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let seriesName = shared.helpers.i32Tohex(event.params.series)
 	let seriesId = seriesModule.helpers.getSeriesId(seriesName)
 
-	let genderName = shared.helpers.i32Tohex(event.params.gender)
-	let genderId = genders.helpers.getGenderId(genderName)
+	let genderId = shared.helpers.i32Tohex(event.params.gender)
 
 	let traitsId = event.params.traits
 
@@ -67,7 +66,7 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let series = seriesModule.increaseSeriesMinted(seriesId, seriesName)
 	series.save()
 
-	let gender = genders.increaseGenderMinted(genderId, genderName)
+	let gender = genders.increaseGenderMinted(genderId)
 	gender.save()
 
 }

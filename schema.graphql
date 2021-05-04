@@ -21,18 +21,37 @@ enum GenderName {
     FEMALE
 }
 
-type GlobalState @entity {
+type TeleporterState @entity {
 	"Internal ID used for indexation"
 	id: ID!
 
 	"Current teleporter contract address"
-	avastarTeleporterAddress: Bytes
+	address: Bytes
 
+	"Current teleporter contract status"
+	paused: Boolean
+}
+
+type PrimeMinterState @entity {
+	"Internal ID used for indexation"
+	id: ID!
+	
 	"Current prime minter contract address"
-	avastarPrimeMinterAddress: Bytes
+	address: Bytes
 
 	"Current prime minter contract status"
-	avastarPrimeMinterPaused: Boolean
+	paused: Boolean
+}
+
+type GlobalState @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"AvastarsPrimeMinter current state"
+	primeMinter: PrimeMinterState! 
+
+	"AvastarsTeleporter current state"
+	teleporter: TeleporterState! 
 
 	"Current series name"
 	currentSeries: Series 

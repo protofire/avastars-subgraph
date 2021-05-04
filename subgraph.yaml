@@ -20,9 +20,9 @@ dataSources:
           file: ./abis/AvastarPrimeMinter.json
       eventHandlers:
         - event: ContractUnpaused()
-          handler: handleContractUnpaused()
+          handler: handleContractUnpaused
         - event: ContractPaused()
-          handler: handleContractPaused()
+          handler: handleContractPaused
         - event: ContractUpgrade(address)
           handler: handleContractUpgrade
         - event: CurrentGenerationSet(uint8)
