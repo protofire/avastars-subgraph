@@ -58,7 +58,7 @@ export namespace global {
 			if (primeMinterState == null) {
 				primeMinterState = new PrimeMinterState(constants.PRIME_MINTER_STATE_ID)
 			}
-			return primeMinterState as TeleporterState
+			return primeMinterState as PrimeMinterState
 		}
 		export function setAddress(address: Bytes): PrimeMinterState {
 			let primeMinterState = getPrimeMinterState()
