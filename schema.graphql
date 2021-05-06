@@ -185,15 +185,8 @@ type Gene @entity {
 	"current gene name "
 	name: GeneName
 
-	"avastars from this series"
-	avastars: [Avastar!]! @derivedFrom(field: "gender")
-
-	"avastars minted for this gender"
-	minted: BigInt!
-
-	"traits with this gender"
-	traits: [Trait!]! @derivedFrom(field: "gender")
-
+	"Traits with this gene"
+	traits: [Trait!]! @derivedFrom(field: "gene")
 }
 
 type Rarity @entity {
@@ -221,7 +214,7 @@ type Series @entity {
 	minted: BigInt!
 
 	"Traits minted for this serie"
-	traits: [TraitSerie!] @derivedFrom(field: "trait")
+	traits: [TraitSerie!]! @derivedFrom(field: "series")
 }
 
 ##
@@ -244,7 +237,7 @@ type TraitSerie @entity {
   	trait: Trait!
 
 	"Serie id"  
-  	serie: Serie!
+  	series: Series!
 }
 
 type Trait @entity {
@@ -267,13 +260,13 @@ type Trait @entity {
 	variation: BigInt 
 
 	"Series of the trait"
-	series: [TraitSerie!] @derivedFrom(field: "serie")
+	series: [TraitSerie!]! @derivedFrom(field: "trait")
  
 	"Trait's name ie: Cat Nose"
 	name: String
 
 	"the fully rendered SVG for the Avastar" # see func assembleArtwork
-	name: svg
+	svg: String
 }
 
 
@@ -310,6 +303,9 @@ type Avastar @entity {
 	# will be get at Transfer event from address 0
 	"avastar's current owner"
 	owner: Account!
+
+	"It's this avastar prime or replicant"
+	wave: Wave
 }
 
 

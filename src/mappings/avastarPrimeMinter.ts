@@ -15,7 +15,7 @@ import {
 
 
 export function handleCurrentGenerationSet(event: CurrentGenerationSetEvent): void {
-	let generationId = generations.helpers.getGenerationId(shared.helpers.i32Tohex(event.params.currentGeneration))
+	let generationId = shared.helpers.i32Tohex(event.params.currentGeneration)
 	let globalState = global.setGeneration(generationId)
 	globalState.save()
 }

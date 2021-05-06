@@ -19,6 +19,9 @@ export namespace global {
 		let state = GlobalState.load(constants.GLOBAL_STATE_ID)
 		if (state == null) {
 			state = new GlobalState(constants.GLOBAL_STATE_ID)
+			state.teleporter = constants.TELEPORTER_STATE_ID
+			state.primeMinter = constants.PRIME_MINTER_STATE_ID
+			state.metadata = constants.METADATA_STATE_ID
 		}
 		return state as GlobalState
 	}
@@ -26,9 +29,6 @@ export namespace global {
 	export function setGeneration(generationId: string): GlobalState {
 		let state = getGlobalState()
 		state.currentGeneration = generationId
-		state.teleporter = constants.TELEPORTER_STATE_ID
-		state.primeMinter = constants.PRIME_MINTER_STATE_ID
-		state.metadata = constants.METADATA_STATE_ID
 		return state as GlobalState
 	}
 
