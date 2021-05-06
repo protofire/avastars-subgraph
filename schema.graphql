@@ -187,6 +187,9 @@ type Gene @entity {
 
 	"Traits with this gene"
 	traits: [Trait!]! @derivedFrom(field: "gene")
+
+	"traits minted for this gene"
+	minted: BigInt!
 }
 
 type Rarity @entity {
