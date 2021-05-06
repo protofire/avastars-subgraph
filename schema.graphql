@@ -1,5 +1,9 @@
 ## TODO attribution entity
 
+
+##
+#  Enums start
+##
 enum GenerationName {
 	ONE,
     TWO,
@@ -50,6 +54,15 @@ enum RarityName {
 	EPIC,
 	LEGENDARY
 }
+
+##
+#  Enums end
+##
+
+
+##
+#  States and globals start
+##
 
 type MetadataState @entity {
 	"Internal ID used for indexation"
@@ -102,6 +115,16 @@ type GlobalState @entity {
 
 }
 
+
+##
+#  States and globals end
+##
+
+
+
+##
+#  Common entities start
+##
 
 type Generation @entity {
  	"Internal ID used for indexation"
@@ -201,6 +224,17 @@ type Series @entity {
 	traits: [TraitSerie!] @derivedFrom(field: "trait")
 }
 
+##
+#  Common entities end
+##
+
+
+
+##
+#  Traits entities start
+##
+
+
 # lookup table for many to many 
 type TraitSerie @entity {
 	"Internal ID used for indexation"
@@ -224,10 +258,10 @@ type Trait @entity {
 	gender: Gender
 
 	"Trait gene, ration the generation of the trait"
-	gene: String
+	gene: Gene
 
 	"Trait ratiy level"
-	rarity: String # Needs an entity
+	rarity: Rarity
 
 	"Variation of the gene the trait represents"
 	variation: BigInt 
@@ -237,7 +271,80 @@ type Trait @entity {
  
 	"Trait's name ie: Cat Nose"
 	name: String
+
+	"the fully rendered SVG for the Avastar" # see func assembleArtwork
+	name: svg
 }
+
+
+##
+#  Traits entities end
+##
+
+
+
+##
+#  Avastars entities start
+##
+
+type Avastar @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"current avastar serial"
+	serial: BigInt
+
+	"avastar generation"
+	generation: Generation
+
+	"avastar series"
+	series: Series
+
+	"avastars gender"
+	gender: Gender
+
+	# This will be kept as the id only to avoid contract calls as traits are stored on chain 
+	"Traits related to the avastar"
+	traits: Trait
+
+	# will be get at Transfer event from address 0
+	"avastar's current owner"
+	owner: Account!
+}
+
+
+##
+#  Avastars entities end
+##
+
+
+
+##
+#  Transactions entities start
+##
+
+
+
+type Account @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Account evm address"
+	address: Bytes
+
+	"owned avastars"
+	avastars: [Avastar!]! @derivedFrom(field: "owner")
+	
+	"Transactions sent by this account"
+	sent: [Transaction!] @derivedFrom(field: "from")
+ 
+	"Transactions recieved by this account"
+	recieved: [Transaction!] @derivedFrom(field: "to")
+
+	"ath recieved as form of token burning"
+	ethBalance: BigInt!
+}
+
 
 
 enum TranasctionType { 
@@ -290,50 +397,4 @@ type Mint implements Transaction @entity {
 
 	"Current transaction type"
 	type: TranasctionType!
-}
-
-
-type Account @entity {
-	"Internal ID used for indexation"
-	id: ID!
-
-	"Account evm address"
-	address: Bytes
-
-	"owned avastars"
-	avastars: [Avastar!]! @derivedFrom(field: "owner")
-	
-	"Transactions sent by this account"
-	sent: [Transaction!] @derivedFrom(field: "from")
- 
-	"Transactions recieved by this account"
-	recieved: [Transaction!] @derivedFrom(field: "to")
-
-	"ath recieved as form of token burning"
-	ethBalance: BigInt!
-}
-
-type Avastar @entity {
-	"Internal ID used for indexation"
-	id: ID!
-
-	"current avastar serial"
-	serial: BigInt
-
-	"avastar generation"
-	generation: Generation
-
-	"avastar series"
-	series: Series
-
-	"avastars gender"
-	gender: Gender
-
-	# This will be kept as the id only to avoid contract calls as traits are stored on chain 
-	"Traits related to the avastar"
-	traits: Trait
-
-	# will be get at Transfer event from address 0
-	"avastar's current owner"
-	owner: Account!
 }
