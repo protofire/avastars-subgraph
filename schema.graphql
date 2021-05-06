@@ -201,6 +201,9 @@ type Rarity @entity {
 
 	"traits with this rarity"
 	traits: [Trait!]! @derivedFrom(field: "rarity")
+
+	"traits minted for this rarity"
+	minted: BigInt!
 }
 
 type Series @entity {
