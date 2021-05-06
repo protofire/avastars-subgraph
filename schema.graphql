@@ -1,3 +1,5 @@
+## TODO attribution entity
+
 enum GenerationName {
 	ONE,
     TWO,
@@ -15,14 +17,39 @@ enum SeriesName {
     FIVE
 }
 
+enum WaveName {
+ PRIME,
+ REPLICANT
+}
+
 enum GenderName {
     ANY,
     MALE,
     FEMALE
 }
 
-## TODO ENTITIES 
-# WAVE
+enum GeneName {
+	SKIN_TONE,
+	HAIR_COLOR,
+	EYE_COLOR,
+	BG_COLOR,
+	BACKDROP,
+	EARS,
+	FACE,
+	NOSE,
+	MOUTH,
+	FACIAL_FEATURE,
+	EYES,
+	HAIR_STYLE
+}
+
+enum RarityName {
+	COMMON,
+	UNCOMMON,
+	RARE,
+	EPIC,
+	LEGENDARY
+}
 
 type MetadataState @entity {
 	"Internal ID used for indexation"
@@ -75,12 +102,13 @@ type GlobalState @entity {
 
 }
 
+
 type Generation @entity {
  	"Internal ID used for indexation"
 	id: ID!
 
 	"current generation name (1 to 5)"
-	name: String # GenerationName
+	name: GenerationName
 
 	"avastars from this generation"
 	avastars: [Avastar!]! @derivedFrom(field: "generation")
@@ -93,13 +121,46 @@ type Generation @entity {
 
 }
 
-
 type Gender @entity {
  	"Internal ID used for indexation"
 	id: ID!
 
 	"current gender name (any or female or male)"
-	name: String # GenderName
+	name: GenderName
+
+	"avastars from this series"
+	avastars: [Avastar!]! @derivedFrom(field: "gender")
+
+	"avastars minted for this gender"
+	minted: BigInt!
+
+	"traits with this gender"
+	traits: [Trait!]! @derivedFrom(field: "gender")
+}
+
+type Wave @entity {
+ 	"Internal ID used for indexation"
+	id: ID!
+
+	"current wave name prime / replicant"
+	name: WaveName 
+
+	"avastars from this wave"
+	avastars: [Avastar!]! @derivedFrom(field: "wave")
+
+	"avastars minted on this generation"
+	minted: BigInt!
+
+	# rarestAvastar: Avastar // BigInt (??)
+}
+
+
+type Gene @entity {
+ 	"Internal ID used for indexation"
+	id: ID!
+
+	"current gene name "
+	name: GeneName
 
 	"avastars from this series"
 	avastars: [Avastar!]! @derivedFrom(field: "gender")
@@ -110,6 +171,17 @@ type Gender @entity {
 	"traits with this gender"
 	traits: [Trait!]! @derivedFrom(field: "gender")
 
+}
+
+type Rarity @entity {
+ 	"Internal ID used for indexation"
+	id: ID!
+
+	"current rarity name "
+	name: RarityName
+
+	"traits with this rarity"
+	traits: [Trait!]! @derivedFrom(field: "rarity")
 }
 
 type Series @entity {
