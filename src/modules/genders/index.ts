@@ -7,12 +7,10 @@ export namespace genders {
 		export let GENDER_MALE = "0x1"
 		export let GENDER_FEMALE = "0x2"
 
-
 		export let GENDER_NAMES = new Map<string, string>()
 		GENDER_NAMES.set(GENDER_ANY, "ANY")
 		GENDER_NAMES.set(GENDER_MALE, "MALE")
 		GENDER_NAMES.set(GENDER_FEMALE, "FEMALE")
-
 	}
 
 	export namespace helpers {

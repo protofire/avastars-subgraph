@@ -21,6 +21,9 @@ enum GenderName {
     FEMALE
 }
 
+## TODO ENTITIES 
+# WAVE
+
 type MetadataState @entity {
 	"Internal ID used for indexation"
 	id: ID!
@@ -90,23 +93,6 @@ type Generation @entity {
 
 }
 
-type Series @entity {
- 	"Internal ID used for indexation"
-	id: ID!
-
-	"current series name ( promo or 1 to 5)"
-	name: String # SeriesName
-
-	"avastars from this series"
-	avastars: [Avastar!]! @derivedFrom(field: "series")
-
-	"avastars minted on this series"
-	minted: BigInt!
-
-	"trait which series belong to"
-	trait: Trait
-
-}
 
 type Gender @entity {
  	"Internal ID used for indexation"
@@ -126,6 +112,35 @@ type Gender @entity {
 
 }
 
+type Series @entity {
+ 	"Internal ID used for indexation"
+	id: ID!
+
+	"current series name ( promo or 1 to 5)"
+	name: String 
+
+	"avastars from this series"
+	avastars: [Avastar!]! @derivedFrom(field: "series")
+
+	"avastars minted on this series"
+	minted: BigInt!
+
+	"Traits minted for this serie"
+	traits: [TraitSerie!] @derivedFrom(field: "trait")
+}
+
+# lookup table for many to many 
+type TraitSerie @entity {
+	"Internal ID used for indexation"
+  	id: ID!   # Set to `${user.id}-${organization.id}`
+
+	"Trait id"  
+  	trait: Trait!
+
+	"Serie id"  
+  	serie: Serie!
+}
+
 type Trait @entity {
  	"Internal ID used for indexation"
 	id: ID!
@@ -136,19 +151,19 @@ type Trait @entity {
 	"Trait gender"
 	gender: Gender
 
-	"Trait gene"
+	"Trait gene, ration the generation of the trait"
 	gene: String
 
 	"Trait ratiy level"
-	rarity: String
+	rarity: String # Needs an entity
 
-	"Trait variation level"
-	variation: BigInt
+	"Variation of the gene the trait represents"
+	variation: BigInt 
 
 	"Series of the trait"
-	series: [Series!] @derivedFrom(field: "trait")
+	series: [TraitSerie!] @derivedFrom(field: "serie")
  
-	"Trait's svg url (?"
+	"Trait's name ie: Cat Nose"
 	name: String
 }
 
