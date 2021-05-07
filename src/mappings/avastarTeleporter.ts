@@ -41,8 +41,7 @@ export function handleTransfer(event: TransferEvent): void {
 export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let tokenId = event.params.id.toHex()
 
-	let generationName = shared.helpers.i32Tohex(event.params.generation)
-	let generationId = generations.helpers.getGenerationId(generationName)
+	let generationId = shared.helpers.i32Tohex(event.params.generation)
 
 	let seriesName = shared.helpers.i32Tohex(event.params.series)
 	let seriesId = seriesModule.helpers.getSeriesId(seriesName)
@@ -64,7 +63,7 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	)
 	avastar.save()
 
-	let generation = generations.increaseGenerationMinted(generationId, generationName)
+	let generation = generations.increaseGenerationMinted(generationId)
 	generation.save()
 
 	let series = seriesModule.increaseSeriesMinted(seriesId, seriesName)
