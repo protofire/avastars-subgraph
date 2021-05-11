@@ -40,16 +40,11 @@ export function handleTransfer(event: TransferEvent): void {
 
 export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let tokenId = event.params.id.toHex()
-
 	let generationId = shared.helpers.i32Tohex(event.params.generation)
-
-	let seriesName = shared.helpers.i32Tohex(event.params.series)
-	let seriesId = seriesModule.helpers.getSeriesId(seriesName)
-
+	let seriesId = shared.helpers.i32Tohex(event.params.series)
 	let genderId = shared.helpers.i32Tohex(event.params.gender)
-
+	// Todo decode traits
 	let traitsId = event.params.traits
-
 	let trait = traits.getTraitById(traitsId, event.address)
 	trait.save()
 
@@ -63,14 +58,15 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	)
 	avastar.save()
 
+	let gender = genders.increaseGenderMinted(genderId)
+	gender.save()
+
 	let generation = generations.increaseGenerationMinted(generationId)
 	generation.save()
 
-	let series = seriesModule.increaseSeriesMinted(seriesId, seriesName)
-	series.save()
 
-	let gender = genders.increaseGenderMinted(genderId)
-	gender.save()
+	let series = seriesModule.increaseSeriesMinted(seriesId)
+	series.save()
 
 }
 
