@@ -1,6 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts'
 import { Avastar } from "../../../generated/schema";
-import { shared, generations, series as seriesModule } from "../index";
+import { shared, generations, series as seriesModule, waves } from "../index";
 
 export namespace tokens {
 	export function getNewAvastar(tokenId: string, accountId: string): Avastar {
@@ -11,6 +11,7 @@ export namespace tokens {
 		}
 		return avastar as Avastar
 	}
+
 	export function loadAvastar(tokenId: string): Avastar {
 		let avastar = Avastar.load(tokenId)
 		if (avastar == null) {
@@ -23,6 +24,7 @@ export namespace tokens {
 		}
 		return avastar as Avastar
 	}
+
 	export function mintAvastar(
 		tokenId: string, serial: BigInt, generation: string,
 		series: string, gender: string, traitsId: string
@@ -33,7 +35,20 @@ export namespace tokens {
 		avastar.series = series
 		avastar.gender = gender
 		avastar.traits = traitsId
+		avastar.wave = waves.constants.WAVE_PRIME
+		avastar.replicated = false
+		return avastar as Avastar
+	}
 
+	export function changeOwner(tokenId: string, owner: string): Avastar {
+		let avastar = loadAvastar(tokenId)
+		avastar.owner = owner
+		return avastar as Avastar
+	}
+
+	export function addApproval(tokenId: string, approval: string): Avastar {
+		let avastar = loadAvastar(tokenId)
+		avastar.approval = approval
 		return avastar as Avastar
 	}
 }

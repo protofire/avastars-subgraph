@@ -1,3 +1,9 @@
+## TODO attribution entity
+
+
+##
+#  Enums start
+##
 enum GenerationName {
 	ONE,
     TWO,
@@ -15,11 +21,48 @@ enum SeriesName {
     FIVE
 }
 
+enum WaveName {
+ PRIME,
+ REPLICANT
+}
+
 enum GenderName {
     ANY,
     MALE,
     FEMALE
 }
+
+enum GeneName {
+	SKIN_TONE,
+	HAIR_COLOR,
+	EYE_COLOR,
+	BG_COLOR,
+	BACKDROP,
+	EARS,
+	FACE,
+	NOSE,
+	MOUTH,
+	FACIAL_FEATURE,
+	EYES,
+	HAIR_STYLE
+}
+
+enum RarityName {
+	COMMON,
+	UNCOMMON,
+	RARE,
+	EPIC,
+	LEGENDARY
+}
+
+##
+#  Enums end
+##
+
+
+##
+#  States and globals start
+##
 
 type MetadataState @entity {
 	"Internal ID used for indexation"
@@ -72,12 +115,23 @@ type GlobalState @entity {
 
 }
 
+
+##
+#  States and globals end
+##
+
+
+
+##
+#  Common entities start
+##
+
 type Generation @entity {
  	"Internal ID used for indexation"
 	id: ID!
 
 	"current generation name (1 to 5)"
-	name: String # GenerationName
+	name: GenerationName
 
 	"avastars from this generation"
 	avastars: [Avastar!]! @derivedFrom(field: "generation")
@@ -90,30 +144,12 @@ type Generation @entity {
 
 }
 
-type Series @entity {
- 	"Internal ID used for indexation"
-	id: ID!
-
-	"current series name ( promo or 1 to 5)"
-	name: String # SeriesName
-
-	"avastars from this series"
-	avastars: [Avastar!]! @derivedFrom(field: "series")
-
-	"avastars minted on this series"
-	minted: BigInt!
-
-	"trait which series belong to"
-	trait: Trait
-
-}
-
 type Gender @entity {
  	"Internal ID used for indexation"
 	id: ID!
 
 	"current gender name (any or female or male)"
-	name: String # GenderName
+	name: GenderName
 
 	"avastars from this series"
 	avastars: [Avastar!]! @derivedFrom(field: "gender")
@@ -123,7 +159,91 @@ type Gender @entity {
 
 	"traits with this gender"
 	traits: [Trait!]! @derivedFrom(field: "gender")
+}
 
+type Wave @entity {
+ 	"Internal ID used for indexation"
+	id: ID!
+
+	"current wave name prime / replicant"
+	name: WaveName 
+
+	"avastars from this wave"
+	avastars: [Avastar!]! @derivedFrom(field: "wave")
+
+	"avastars minted on this generation"
+	minted: BigInt!
+
+	# rarestAvastar: Avastar // BigInt (??)
+}
+
+
+type Gene @entity {
+ 	"Internal ID used for indexation"
+	id: ID!
+
+	"current gene name "
+	name: GeneName
+
+	"Traits with this gene"
+	traits: [Trait!]! @derivedFrom(field: "gene")
+
+	"traits minted for this gene"
+	minted: BigInt!
+}
+
+type Rarity @entity {
+ 	"Internal ID used for indexation"
+	id: ID!
+
+	"current rarity name "
+	name: RarityName
+
+	"traits with this rarity"
+	traits: [Trait!]! @derivedFrom(field: "rarity")
+
+	"traits minted for this rarity"
+	minted: BigInt!
+}
+
+type Series @entity {
+ 	"Internal ID used for indexation"
+	id: ID!
+
+	"current series name ( promo or 1 to 5)"
+	name: String 
+
+	"avastars from this series"
+	avastars: [Avastar!]! @derivedFrom(field: "series")
+
+	"avastars minted on this series"
+	minted: BigInt!
+
+	"Traits minted for this serie"
+	traits: [TraitSerie!]! @derivedFrom(field: "series")
+}
+
+##
+#  Common entities end
+##
+
+
+
+##
+#  Traits entities start
+##
+
+
+# lookup table for many to many 
+type TraitSerie @entity {
+	"Internal ID used for indexation"
+  	id: ID!   # Set to `${user.id}-${organization.id}`
+
+	"Trait id"  
+  	trait: Trait!
+
+	"Serie id"  
+  	series: Series!
 }
 
 type Trait @entity {
@@ -136,21 +256,113 @@ type Trait @entity {
 	"Trait gender"
 	gender: Gender
 
-	"Trait gene"
-	gene: String
+	"Trait gene, ration the generation of the trait"
+	gene: Gene
 
 	"Trait ratiy level"
-	rarity: String
+	rarity: Rarity
 
-	"Trait variation level"
-	variation: BigInt
+	"Variation of the gene the trait represents"
+	variation: BigInt 
 
 	"Series of the trait"
-	series: [Series!] @derivedFrom(field: "trait")
+	series: [TraitSerie!]! @derivedFrom(field: "trait")
  
-	"Trait's svg url (?"
+	"Trait's name ie: Cat Nose"
 	name: String
+
+	"the fully rendered SVG for the Avastar" # see func assembleArtwork
+	svg: String
 }
+
+
+##
+#  Traits entities end
+##
+
+
+
+##
+#  Avastars entities start
+##
+
+type Avastar @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"current avastar serial"
+	serial: BigInt
+
+	"avastar generation"
+	generation: Generation
+
+	"avastar series"
+	series: Series
+
+	"avastars gender"
+	gender: Gender
+
+	# This will be kept as the id only to avoid contract calls as traits are stored on chain 
+	"Traits related to the avastar"
+	traits: Trait
+
+	# will be get at Transfer event from address 0
+	"avastar's current owner"
+	owner: Account!
+
+	"Current approval"
+	approval: Account
+
+	"It's this avastar prime or replicant"
+	wave: Wave
+
+	"If it's prime, does it have replicants?"
+	replicated: Boolean
+}
+
+
+##
+#  Avastars entities end
+##
+
+type Delegation @entity {
+	id:                           ID!
+	owner:                        Account!
+	operator:                     Account!
+	approved:                     Boolean!
+}
+
+
+##
+#  Transactions entities start
+##
+
+
+
+type Account @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Account evm address"
+	address: Bytes
+
+	"owned avastars"
+	avastars: [Avastar!]! @derivedFrom(field: "owner")
+
+	approved: [Avastar!]! @derivedFrom(field: "approval")
+	
+	"Transactions sent by this account"
+	sent: [Transaction!] @derivedFrom(field: "from")
+ 
+	"Transactions recieved by this account"
+	recieved: [Transaction!] @derivedFrom(field: "to")
+
+	# approvalsOwner:               [Approval!]! @derivedFrom(field: "owner")
+	# approvalsApproved:            [Approval!]! @derivedFrom(field: "approved")
+	# approvalsForAllOwner:         [ApprovalForAll!]! @derivedFrom(field: "owner")
+	# approvalsForAllOperator:      [ApprovalForAll!]! @derivedFrom(field: "operator")
+}
+
 
 
 enum TranasctionType { 
@@ -195,8 +407,25 @@ type Mint implements Transaction @entity {
 	"Avastar traded"
 	token: Avastar
 
-	"Amount of tokens or ether"
-	amount: BigInt
+	"Transaction creation timestamp"
+	timestamp: BigInt!
+
+	"Current transaction type"
+	type: TranasctionType!
+}
+
+type Burn implements Transaction @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Seller account"
+	from: Account
+
+	"Buyer account"
+	to: Account
+
+	"Avastar traded"
+	token: Avastar
 
 	"Transaction creation timestamp"
 	timestamp: BigInt!
@@ -205,48 +434,22 @@ type Mint implements Transaction @entity {
 	type: TranasctionType!
 }
 
-
-type Account @entity {
+type Transfer implements Transaction @entity {
 	"Internal ID used for indexation"
 	id: ID!
 
-	"Account evm address"
-	address: Bytes
+	"Seller account"
+	from: Account
 
-	"owned avastars"
-	avastars: [Avastar!]! @derivedFrom(field: "owner")
-	
-	"Transactions sent by this account"
-	sent: [Transaction!] @derivedFrom(field: "from")
- 
-	"Transactions recieved by this account"
-	recieved: [Transaction!] @derivedFrom(field: "to")
+	"Buyer account"
+	to: Account
 
-	"ath recieved as form of token burning"
-	ethBalance: BigInt!
-}
+	"Avastar traded"
+	token: Avastar
 
-type Avastar @entity {
-	"Internal ID used for indexation"
-	id: ID!
+	"Transaction creation timestamp"
+	timestamp: BigInt!
 
-	"current avastar serial"
-	serial: BigInt
-
-	"avastar generation"
-	generation: Generation
-
-	"avastar series"
-	series: Series
-
-	"avastars gender"
-	gender: Gender
-
-	# This will be kept as the id only to avoid contract calls as traits are stored on chain 
-	"Traits related to the avastar"
-	traits: Trait
-
-	# will be get at Transfer event from address 0
-	"avastar's current owner"
-	owner: Account!
+	"Current transaction type"
+	type: TranasctionType!
 }

@@ -10,7 +10,7 @@ export namespace accounts {
 		let account = Account.load(accountId)
 		if (account == null) {
 			account = new Account(accountId)
-			account.ethBalance = integer.ZERO
+			// account.ethBalance = integer.ZERO
 			account.address = accountAddress
 		}
 		return account as Account

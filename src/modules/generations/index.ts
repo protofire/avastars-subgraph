@@ -10,46 +10,41 @@ export namespace generations {
 		export let GENERATION_FIVE = "0x4"
 
 
-		export let GENERATION_IDS = new Map<string, string>()
-		GENERATION_IDS.set(GENERATION_ONE, "0xg1")
-		GENERATION_IDS.set(GENERATION_TWO, "0xg2")
-		GENERATION_IDS.set(GENERATION_THREE, "0xg3")
-		GENERATION_IDS.set(GENERATION_FOUR, "0xg4")
-		GENERATION_IDS.set(GENERATION_FIVE, "0xg5")
+		export let GENERATION_NAMES = new Map<string, string>()
+		GENERATION_NAMES.set(GENERATION_ONE, "ONE")
+		GENERATION_NAMES.set(GENERATION_TWO, "TWO")
+		GENERATION_NAMES.set(GENERATION_THREE, "THREE")
+		GENERATION_NAMES.set(GENERATION_FOUR, "FOUR")
+		GENERATION_NAMES.set(GENERATION_FIVE, "FIVE")
 	}
 
 	export namespace helpers {
-		export function getGenerationId(name: string): string | null {
-			let generationId: string | null = constants.GENERATION_IDS.has(name) ?
-				constants.GENERATION_IDS.get(name) : null
-			if (generationId == null) {
+		export function getGenerationName(id: string): string | null {
+			let generationName: string | null = constants.GENERATION_NAMES.has(id) ?
+				constants.GENERATION_NAMES.get(id) : null
+			if (generationName == null) {
 				shared.logs.logInfo(
 					"getGenerationId",
-					"Coulnd't find id for name: " + name
+					"Coulnd't find id for id: " + id
 				)
-				// shared.logs.logCritical(
-				// 	"getGenerationId",
-				// 	"Coulnd't find id for name: " + name
-				// )
 			}
-			return name
+			return generationName
 		}
 
-		export function getOrCreateGeneration(generationId: string, name: string): Generation {
+		export function getOrCreateGeneration(generationId: string): Generation {
 			let generation = Generation.load(generationId)
 			if (generation == null) {
 				generation = new Generation(generationId)
-				generation.name = name
+				generation.name = getGenerationName(generationId)
 				generation.minted = integer.ZERO
 			}
 			return generation as Generation
-
 		}
 
 	}
 
-	export function increaseGenerationMinted(generationId: string, name: string): Generation {
-		let generation = helpers.getOrCreateGeneration(generationId, name)
+	export function increaseGenerationMinted(generationId: string): Generation {
+		let generation = helpers.getOrCreateGeneration(generationId)
 
 		generation.minted = generation.minted.plus(integer.ONE)
 		return generation as Generation

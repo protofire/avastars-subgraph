@@ -1,56 +1,119 @@
 
 import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
-import { Bytes } from '@graphprotocol/graph-ts'
+import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 
 import {
 	ContractPaused,
 	ContractUnpaused,
 	ContractUpgrade as ContractUpgradeEvent,
 	NewPrime as NewPrimeEvent,
-	Transfer as TransferEvent
+	Transfer as TransferEvent,
+	Approval as ApprovalEvent,
+	ApprovalForAll as ApprovalForAllEvent,
 } from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
 import {
 	accounts,
-	global,
-	generations,
 	genders,
+	generations,
+	global,
 	series as seriesModule,
 	shared,
 	tokens,
 	traits,
+	transactions,
 } from '../modules'
 
 
-function handleMint(to: Bytes, tokenId: string): void {
+function handleMint(to: Bytes, tokenId: string, timestamp: BigInt): void {
+
 	let account = accounts.getAccount(to)
 	account.save()
-	let avastar = tokens.getNewAvastar(tokenId, to.toHex())
+
+	let avastar = tokens.getNewAvastar(tokenId, account.id)
 	avastar.save()
+
+	let transaction = transactions.getNewMint(account.id, tokenId, timestamp)
+	transaction.save()
 }
 
-export function handleTransfer(event: TransferEvent): void {
+function handleBurn(from: Bytes, tokenId: string, timestamp: BigInt): void {
+
+	let account = accounts.getAccount(from)
+	account.save()
+
+	let avastar = tokens.changeOwner(tokenId, ADDRESS_ZERO)
+	avastar.save()
+
+	let transaction = transactions.getNewBurn(account.id, tokenId, timestamp)
+	transaction.save()
+}
+
+function handleTransfer(from: Bytes, to: Bytes, tokenId: string, timestamp: BigInt): void {
+
+	let seller = accounts.getAccount(from)
+	seller.save()
+
+	let buyer = accounts.getAccount(to)
+	buyer.save()
+
+	let avastar = tokens.changeOwner(tokenId, buyer.id)
+	avastar.save()
+
+	let transaction = transactions.getNewTransfer(seller.id, buyer.id, tokenId, timestamp)
+	transaction.save()
+}
+
+export function handleTransaction(event: TransferEvent): void {
 	let from = event.params.from.toHex()
+	let to = event.params.from.toHex()
 	let tokenId = event.params.tokenId.toHex()
+	let timestamp = event.block.timestamp
 	if (from == ADDRESS_ZERO) {
-		handleMint(event.params.to, tokenId)
+		handleMint(event.params.to, tokenId, timestamp)
+	} else if (to == ADDRESS_ZERO) {
+		handleBurn(event.params.from, tokenId, timestamp)
+	} else {
+		handleTransfer(event.params.from, event.params.to, tokenId, timestamp)
 	}
 
 }
 
+export function handleApproval(event: ApprovalEvent): void {
+	let tokenId = event.params.tokenId.toHex()
+	let ownerAddress = event.params.owner
+	let approvedAddress = event.params.approved
+
+	let approved = accounts.getAccount(approvedAddress)
+	approved.save()
+
+	let owner = accounts.getAccount(ownerAddress)
+	owner.save()
+
+	let token = tokens.addApproval(tokenId, approved.id)
+	token.save()
+}
+
+export function handleApprovalForAll(event: ApprovalForAllEvent): void {
+	let ownerAddress = event.params.owner
+	let operatorAddress = event.params.operator
+
+	let owner = accounts.getAccount(ownerAddress)
+	owner.save()
+
+	let operator = accounts.getAccount(operatorAddress)
+	operator.save()
+
+	let delegation = transactions.getNewDelegation(owner.id, operator.id, event.params.approved)
+}
+
 export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let tokenId = event.params.id.toHex()
-
-	let generationName = shared.helpers.i32Tohex(event.params.generation)
-	let generationId = generations.helpers.getGenerationId(generationName)
-
-	let seriesName = shared.helpers.i32Tohex(event.params.series)
-	let seriesId = seriesModule.helpers.getSeriesId(seriesName)
-
+	let generationId = shared.helpers.i32Tohex(event.params.generation)
+	let seriesId = shared.helpers.i32Tohex(event.params.series)
 	let genderId = shared.helpers.i32Tohex(event.params.gender)
-
+	// Todo decode traits
 	let traitsId = event.params.traits
-
 	let trait = traits.getTraitById(traitsId, event.address)
 	trait.save()
 
@@ -64,14 +127,15 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	)
 	avastar.save()
 
-	let generation = generations.increaseGenerationMinted(generationId, generationName)
-	generation.save()
-
-	let series = seriesModule.increaseSeriesMinted(seriesId, seriesName)
-	series.save()
-
 	let gender = genders.increaseGenderMinted(genderId)
 	gender.save()
+
+	let generation = generations.increaseGenerationMinted(generationId)
+	generation.save()
+
+
+	let series = seriesModule.increaseSeriesMinted(seriesId)
+	series.save()
 
 }
 

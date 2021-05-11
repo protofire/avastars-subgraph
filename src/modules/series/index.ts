@@ -12,38 +12,39 @@ export namespace series {
 		export let SERIES_FIVE = "0x5"
 
 
-		export let SERIES_IDS = new Map<string, string>()
+		export let SERIES_NAMES = new Map<string, string>()
 
-		SERIES_IDS.set(SERIES_PROMO, "0xs0")
-		SERIES_IDS.set(SERIES_ONE, "0xs1")
-		SERIES_IDS.set(SERIES_TWO, "0xs2")
-		SERIES_IDS.set(SERIES_THREE, "0xs3")
-		SERIES_IDS.set(SERIES_FOUR, "0xs4")
-		SERIES_IDS.set(SERIES_FIVE, "0xs5")
+		SERIES_NAMES.set(SERIES_PROMO, "PROMO")
+		SERIES_NAMES.set(SERIES_ONE, "ONE")
+		SERIES_NAMES.set(SERIES_TWO, "TWO")
+		SERIES_NAMES.set(SERIES_THREE, "THREE")
+		SERIES_NAMES.set(SERIES_FOUR, "FOUR")
+		SERIES_NAMES.set(SERIES_FIVE, "FIVE")
 	}
 
 	export namespace helpers {
-		export function getSeriesId(name: string): string | null {
-			let seriesId: string | null = constants.SERIES_IDS.has(name) ?
-				constants.SERIES_IDS.get(name) : null
-			if (seriesId == null) {
+		export function getSeriesName(id: string): string | null {
+			let seriesName: string | null = constants.SERIES_NAMES.has(id) ?
+				constants.SERIES_NAMES.get(id) : null
+			if (seriesName == null) {
 				shared.logs.logInfo(
 					"getSeriesId",
-					"Coulnd't find id for name: " + name
+					"Coulnd't find name for id: " + id
 				)
+				return id
 				// shared.logs.logCritical(
 				// 	"getSeriesId",
 				// 	"Coulnd't find id for name: " + name
 				// )
 			}
-			return name
+			return seriesName
 		}
 
-		export function getOrCreateSeries(seriesId: string, name: string): Series {
+		export function getOrCreateSeries(seriesId: string): Series {
 			let series = Series.load(seriesId)
 			if (series == null) {
 				series = new Series(seriesId)
-				series.name = name
+				series.name = getSeriesName(seriesId)
 				series.minted = integer.ZERO
 			}
 			return series as Series
@@ -54,8 +55,8 @@ export namespace series {
 
 
 
-	export function increaseSeriesMinted(seriesId: string, name: string): Series {
-		let series = helpers.getOrCreateSeries(seriesId, name)
+	export function increaseSeriesMinted(seriesId: string): Series {
+		let series = helpers.getOrCreateSeries(seriesId)
 		series.minted = series.minted.plus(integer.ONE)
 		return series as Series
 	}
