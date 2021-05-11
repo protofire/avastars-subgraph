@@ -5,53 +5,53 @@
 #  Enums start
 ##
 enum GenerationName {
-	ONE,
-    TWO,
-    THREE,
-    FOUR,
+	ONE
+    TWO
+    THREE
+    FOUR
     FIVE
 }
 
 enum SeriesName {
-    PROMO,
-    ONE,
-    TWO,
-    THREE,
-    FOUR,
+    PROMO
+    ONE
+    TWO
+    THREE
+    FOUR
     FIVE
 }
 
 enum WaveName {
- PRIME,
- REPLICANT
+ 	PRIME
+ 	REPLICANT
 }
 
 enum GenderName {
-    ANY,
-    MALE,
+    ANY
+    MALE
     FEMALE
 }
 
 enum GeneName {
-	SKIN_TONE,
-	HAIR_COLOR,
-	EYE_COLOR,
-	BG_COLOR,
-	BACKDROP,
-	EARS,
-	FACE,
-	NOSE,
-	MOUTH,
-	FACIAL_FEATURE,
-	EYES,
+	SKIN_TONE
+	HAIR_COLOR
+	EYE_COLOR
+	BG_COLOR
+	BACKDROP
+	EARS
+	FACE
+	NOSE
+	MOUTH
+	FACIAL_FEATURE
+	EYES
 	HAIR_STYLE
 }
 
 enum RarityName {
-	COMMON,
-	UNCOMMON,
-	RARE,
-	EPIC,
+	COMMON
+	UNCOMMON
+	RARE
+	EPIC
 	LEGENDARY
 }
 
