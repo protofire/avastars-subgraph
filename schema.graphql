@@ -312,6 +312,9 @@ type Avastar @entity {
 
 	"It's this avastar prime or replicant"
 	wave: Wave
+
+	"If it's prime, does it have replicants?"
+	replicated: Boolean
 }
 
 

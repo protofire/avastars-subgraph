@@ -1,6 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts'
 import { Avastar } from "../../../generated/schema";
-import { shared, generations, series as seriesModule } from "../index";
+import { shared, generations, series as seriesModule, waves } from "../index";
 
 export namespace tokens {
 	export function getNewAvastar(tokenId: string, accountId: string): Avastar {
@@ -33,7 +33,8 @@ export namespace tokens {
 		avastar.series = series
 		avastar.gender = gender
 		avastar.traits = traitsId
-
+		avastar.wave = waves.constants.WAVE_PRIME
+		avastar.replicated = false
 		return avastar as Avastar
 	}
 }
