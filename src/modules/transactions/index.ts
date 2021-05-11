@@ -1,11 +1,13 @@
 import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
 import { BigInt } from "@graphprotocol/graph-ts";
-import { Mint, Burn } from "../../../generated/schema";
+import { Mint, Burn, Transfer } from "../../../generated/schema";
 
 export namespace transactions {
 
 	export namespace constants {
 		export let TRANSACTION_MINT = "MINT"
+		export let TRANSACTION_BURN = "BURN"
+		export let TRANSACTION_TRANSFER = "TRANSFER"
 	}
 
 	export namespace helpers {
@@ -24,6 +26,7 @@ export namespace transactions {
 		transaction.to = to
 		transaction.token = token
 		transaction.timestamp = timestamp
+		transaction.type = constants.TRANSACTION_MINT
 		return transaction as Mint
 	}
 
@@ -33,6 +36,20 @@ export namespace transactions {
 		transaction.to = ADDRESS_ZERO
 		transaction.token = token
 		transaction.timestamp = timestamp
+		transaction.type = constants.TRANSACTION_BURN
 		return transaction as Burn
+	}
+
+	export function getNewTransfer(
+		from: string, to: string,
+		token: string, timestamp: BigInt
+	): Transfer {
+		let transaction = new Transfer(helpers.getNewTransactionId(from, ADDRESS_ZERO, timestamp))
+		transaction.from = from
+		transaction.to = to
+		transaction.token = token
+		transaction.timestamp = timestamp
+		transaction.type = constants.TRANSACTION_BURN
+		return transaction as Transfer
 	}
 }

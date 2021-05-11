@@ -35,16 +35,32 @@ function handleMint(to: Bytes, tokenId: string, timestamp: BigInt): void {
 	let transaction = transactions.getNewMint(to.toHex(), tokenId, timestamp)
 	transaction.save()
 }
+
 function handleBurn(from: Bytes, tokenId: string, timestamp: BigInt): void {
 
 	let account = accounts.getAccount(from)
 	account.save()
 
-	let avastar = tokens.getNewAvastar(tokenId, from.toHex())
+	let avastar = tokens.changeOwner(tokenId, ADDRESS_ZERO)
 	avastar.save()
 
 	// "to" is also being converted to str on getAccount
 	let transaction = transactions.getNewBurn(from.toHex(), tokenId, timestamp)
+	transaction.save()
+}
+
+function handleTransfer(from: Bytes, to: Bytes, tokenId: string, timestamp: BigInt): void {
+
+	let buyer = accounts.getAccount(from)
+	buyer.save()
+
+	let seller = accounts.getAccount(from)
+	seller.save()
+
+	let avastar = tokens.changeOwner(tokenId, to.toHex())
+	avastar.save()
+
+	let transaction = transactions.getNewTransfer(from.toHex(), to.toHex(), tokenId, timestamp)
 	transaction.save()
 }
 
@@ -57,6 +73,8 @@ export function handleTransaction(event: TransferEvent): void {
 		handleMint(event.params.to, tokenId, timestamp)
 	} else if (to == ADDRESS_ZERO) {
 		handleBurn(event.params.from, tokenId, timestamp)
+	} else {
+		handleTransfer(event.params.from, event.params.to, tokenId, timestamp)
 	}
 
 }

@@ -11,6 +11,7 @@ export namespace tokens {
 		}
 		return avastar as Avastar
 	}
+
 	export function loadAvastar(tokenId: string): Avastar {
 		let avastar = Avastar.load(tokenId)
 		if (avastar == null) {
@@ -23,6 +24,7 @@ export namespace tokens {
 		}
 		return avastar as Avastar
 	}
+
 	export function mintAvastar(
 		tokenId: string, serial: BigInt, generation: string,
 		series: string, gender: string, traitsId: string
@@ -35,6 +37,12 @@ export namespace tokens {
 		avastar.traits = traitsId
 		avastar.wave = waves.constants.WAVE_PRIME
 		avastar.replicated = false
+		return avastar as Avastar
+	}
+
+	export function changeOwner(tokenId: string, owner: string): Avastar {
+		let avastar = loadAvastar(tokenId)
+		avastar.owner = owner
 		return avastar as Avastar
 	}
 }
