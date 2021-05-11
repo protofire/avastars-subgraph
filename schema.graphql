@@ -310,6 +310,9 @@ type Avastar @entity {
 	"avastar's current owner"
 	owner: Account!
 
+	"Current approval"
+	approval: Account
+
 	"It's this avastar prime or replicant"
 	wave: Wave
 
@@ -339,15 +342,14 @@ type Account @entity {
 
 	"owned avastars"
 	avastars: [Avastar!]! @derivedFrom(field: "owner")
+
+	approved: [Avastar!]! @derivedFrom(field: "approval")
 	
 	"Transactions sent by this account"
 	sent: [Transaction!] @derivedFrom(field: "from")
  
 	"Transactions recieved by this account"
 	recieved: [Transaction!] @derivedFrom(field: "to")
-
-	"ath recieved as form of token burning"
-	ethBalance: BigInt!
 
 	# approvalsOwner:               [Approval!]! @derivedFrom(field: "owner")
 	# approvalsApproved:            [Approval!]! @derivedFrom(field: "approved")

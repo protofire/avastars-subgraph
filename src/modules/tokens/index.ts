@@ -45,4 +45,10 @@ export namespace tokens {
 		avastar.owner = owner
 		return avastar as Avastar
 	}
+
+	export function addApproval(tokenId: string, approval: string): Avastar {
+		let avastar = loadAvastar(tokenId)
+		avastar.approval = approval
+		return avastar as Avastar
+	}
 }

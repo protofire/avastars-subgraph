@@ -7,7 +7,8 @@ import {
 	ContractUnpaused,
 	ContractUpgrade as ContractUpgradeEvent,
 	NewPrime as NewPrimeEvent,
-	Transfer as TransferEvent
+	Transfer as TransferEvent,
+	Approval as ApprovalEvent,
 } from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
 import {
@@ -77,6 +78,21 @@ export function handleTransaction(event: TransferEvent): void {
 		handleTransfer(event.params.from, event.params.to, tokenId, timestamp)
 	}
 
+}
+
+export function handleApproval(event: ApprovalEvent) {
+	let tokenId = event.params.tokenId.toHex()
+	let ownerAddress = event.params.owner
+	let approvedAddress = event.params.approved
+
+	let token = tokens.addApproval(tokenId, approvedAddress.toHex())
+	token.save()
+
+	let approved = accounts.getAccount(approvedAddress)
+	approved.save()
+
+	let owner = accounts.getAccount(ownerAddress)
+	owner.save()
 }
 
 export function handleMintNewPrime(event: NewPrimeEvent): void {

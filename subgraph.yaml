@@ -61,4 +61,6 @@ dataSources:
           handler: handleMintNewPrime
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransaction
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
       file: ./src/mappings/avastarTeleporter.ts
