@@ -43,7 +43,7 @@ export namespace traits {
 			// is there a mor efficient way? 
 			// FIXME
 			for (let index = 0; index < seriesArray.length; index++) {
-				const serieId = seriesArray[index];
+				let serieId = shared.helpers.i32Tohex(seriesArray[index]);
 				let traitSerie = getOrCreateTraitSerie(traitId, serieId)
 				traitSerie.trait = traitId
 				traitSerie.series = serieId
