@@ -63,6 +63,8 @@ dataSources:
           handler: handleContractUpgrade
         - event: NewPrime(uint256,uint256,uint8,uint8,uint8,uint256)
           handler: handleMintNewPrime
+        - event: NewReplicant(uint256,uint256,uint8,uint8,uint256)
+          handler: handleNewReplicant
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransaction
         - event: Approval(indexed address,indexed address,indexed uint256)

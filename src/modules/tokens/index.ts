@@ -25,7 +25,7 @@ export namespace tokens {
 		return avastar as Avastar
 	}
 
-	export function mintAvastar(
+	export function mintPrime(
 		tokenId: string, serial: BigInt, generation: string,
 		series: string, gender: string, traitsId: string
 	): Avastar {
@@ -37,6 +37,19 @@ export namespace tokens {
 		avastar.traits = traitsId
 		avastar.wave = waves.constants.WAVE_PRIME
 		avastar.replicated = false
+		return avastar as Avastar
+	}
+
+	export function mintReplicant(
+		tokenId: string, serial: BigInt, generation: string,
+		gender: string, traitsId: string
+	): Avastar {
+		let avastar = loadAvastar(tokenId)
+		avastar.serial = serial
+		avastar.generation = generation
+		avastar.gender = gender
+		avastar.traits = traitsId
+		avastar.wave = waves.constants.WAVE_PREPLICANT
 		return avastar as Avastar
 	}
 

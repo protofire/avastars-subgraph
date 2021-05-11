@@ -7,6 +7,7 @@ import {
 	ContractUnpaused,
 	ContractUpgrade as ContractUpgradeEvent,
 	NewPrime as NewPrimeEvent,
+	NewReplicant as NewReplicantEvent,
 	Transfer as TransferEvent,
 	Approval as ApprovalEvent,
 	ApprovalForAll as ApprovalForAllEvent,
@@ -117,7 +118,7 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let trait = traits.getTraitById(traitsId, event.address)
 	trait.save()
 
-	let avastar = tokens.mintAvastar(
+	let avastar = tokens.mintPrime(
 		tokenId,
 		event.params.serial,
 		generationId,
@@ -136,6 +137,33 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 
 	let series = seriesModule.increaseSeriesMinted(seriesId)
 	series.save()
+
+}
+
+export function handleNewReplicant(event: NewReplicantEvent): void {
+	let tokenId = event.params.id.toHex()
+	let generationId = shared.helpers.i32Tohex(event.params.generation)
+	let genderId = shared.helpers.i32Tohex(event.params.gender)
+	// Todo decode traits
+	let traitsId = event.params.traits
+	let trait = traits.getTraitById(traitsId, event.address)
+	trait.save()
+
+	let avastar = tokens.mintReplicant(
+		tokenId,
+		event.params.serial,
+		generationId,
+		genderId,
+		traitsId.toHex()
+	)
+	avastar.save()
+
+	let gender = genders.increaseGenderMinted(genderId)
+	gender.save()
+
+	let generation = generations.increaseGenerationMinted(generationId)
+	generation.save()
+
 
 }
 
