@@ -9,6 +9,7 @@ import {
 	NewPrime as NewPrimeEvent,
 	Transfer as TransferEvent,
 	Approval as ApprovalEvent,
+	ApprovalForAll as ApprovalForAllEvent,
 } from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
 import {
@@ -29,11 +30,10 @@ function handleMint(to: Bytes, tokenId: string, timestamp: BigInt): void {
 	let account = accounts.getAccount(to)
 	account.save()
 
-	let avastar = tokens.getNewAvastar(tokenId, to.toHex())
+	let avastar = tokens.getNewAvastar(tokenId, account.id)
 	avastar.save()
 
-	// "to" is also being converted to str on getAccount
-	let transaction = transactions.getNewMint(to.toHex(), tokenId, timestamp)
+	let transaction = transactions.getNewMint(account.id, tokenId, timestamp)
 	transaction.save()
 }
 
@@ -45,23 +45,22 @@ function handleBurn(from: Bytes, tokenId: string, timestamp: BigInt): void {
 	let avastar = tokens.changeOwner(tokenId, ADDRESS_ZERO)
 	avastar.save()
 
-	// "to" is also being converted to str on getAccount
-	let transaction = transactions.getNewBurn(from.toHex(), tokenId, timestamp)
+	let transaction = transactions.getNewBurn(account.id, tokenId, timestamp)
 	transaction.save()
 }
 
 function handleTransfer(from: Bytes, to: Bytes, tokenId: string, timestamp: BigInt): void {
 
-	let buyer = accounts.getAccount(from)
-	buyer.save()
-
 	let seller = accounts.getAccount(from)
 	seller.save()
 
-	let avastar = tokens.changeOwner(tokenId, to.toHex())
+	let buyer = accounts.getAccount(to)
+	buyer.save()
+
+	let avastar = tokens.changeOwner(tokenId, buyer.id)
 	avastar.save()
 
-	let transaction = transactions.getNewTransfer(from.toHex(), to.toHex(), tokenId, timestamp)
+	let transaction = transactions.getNewTransfer(seller.id, buyer.id, tokenId, timestamp)
 	transaction.save()
 }
 
@@ -85,14 +84,27 @@ export function handleApproval(event: ApprovalEvent) {
 	let ownerAddress = event.params.owner
 	let approvedAddress = event.params.approved
 
-	let token = tokens.addApproval(tokenId, approvedAddress.toHex())
-	token.save()
-
 	let approved = accounts.getAccount(approvedAddress)
 	approved.save()
 
 	let owner = accounts.getAccount(ownerAddress)
 	owner.save()
+
+	let token = tokens.addApproval(tokenId, approved.id)
+	token.save()
+}
+
+export function handleApprovalForAll(event: ApprovalForAllEvent) {
+	let ownerAddress = event.params.owner
+	let operatorAddress = event.params.operator
+
+	let owner = accounts.getAccount(ownerAddress)
+	owner.save()
+
+	let operator = accounts.getAccount(operatorAddress)
+	operator.save()
+
+	let delegation = transactions.getNewDelegation(owner.id, operator.id, event.params.approved)
 }
 
 export function handleMintNewPrime(event: NewPrimeEvent): void {

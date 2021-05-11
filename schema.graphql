@@ -325,6 +325,12 @@ type Avastar @entity {
 #  Avastars entities end
 ##
 
+type Delegation @entity {
+	id:                           ID!
+	owner:                        Account!
+	operator:                     Account!
+	approved:                     Boolean!
+}
 
 
 ##
