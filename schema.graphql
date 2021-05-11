@@ -349,6 +349,7 @@ type Account @entity {
 	"owned avastars"
 	avastars: [Avastar!]! @derivedFrom(field: "owner")
 
+	"approved transactions"
 	approved: [Avastar!]! @derivedFrom(field: "approval")
 	
 	"Transactions sent by this account"
@@ -357,16 +358,17 @@ type Account @entity {
 	"Transactions recieved by this account"
 	recieved: [Transaction!] @derivedFrom(field: "to")
 
-	# approvalsOwner:               [Approval!]! @derivedFrom(field: "owner")
-	# approvalsApproved:            [Approval!]! @derivedFrom(field: "approved")
-	# approvalsForAllOwner:         [ApprovalForAll!]! @derivedFrom(field: "owner")
-	# approvalsForAllOperator:      [ApprovalForAll!]! @derivedFrom(field: "operator")
+	"The amount of ether deposited"
+	ethAmount: BigInt
 }
 
 
 
 enum TranasctionType { 
-	MINT 
+	MINT,
+	BURN,
+	TRANSFER,
+	DEPOSIT
  }
 
 
@@ -407,6 +409,9 @@ type Mint implements Transaction @entity {
 	"Avastar traded"
 	token: Avastar
 
+	"Amount of tokens or ether"
+	amount: BigInt
+
 	"Transaction creation timestamp"
 	timestamp: BigInt!
 
@@ -427,6 +432,9 @@ type Burn implements Transaction @entity {
 	"Avastar traded"
 	token: Avastar
 
+	"Amount of tokens or ether"
+	amount: BigInt
+
 	"Transaction creation timestamp"
 	timestamp: BigInt!
 
@@ -446,6 +454,32 @@ type Transfer implements Transaction @entity {
 
 	"Avastar traded"
 	token: Avastar
+
+	"Amount of tokens or ether"
+	amount: BigInt
+
+	"Transaction creation timestamp"
+	timestamp: BigInt!
+
+	"Current transaction type"
+	type: TranasctionType!
+}
+
+type Deposit implements Transaction @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Seller account"
+	from: Account
+
+	"Buyer account"
+	to: Account
+
+	"Avastar traded"
+	token: Avastar
+
+	"Amount of tokens or ether"
+	amount: BigInt
 
 	"Transaction creation timestamp"
 	timestamp: BigInt!

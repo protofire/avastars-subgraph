@@ -19,6 +19,8 @@ dataSources:
         - name: AvastarPrimeMinter
           file: ./abis/AvastarPrimeMinter.json
       eventHandlers:
+        - event: DepositorBalance(indexed address,uint256)
+          handler: handleDepositorBalance
         - event: ContractUnpaused()
           handler: handleContractUnpaused
         - event: ContractPaused()
