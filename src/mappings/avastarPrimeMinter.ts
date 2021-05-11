@@ -21,7 +21,7 @@ export function handleCurrentGenerationSet(event: CurrentGenerationSetEvent): vo
 }
 
 export function handleCurrentSeriesSet(event: CurrentSeriesSetEvent): void {
-	let seriesId = seriesModule.helpers.getSeriesId(shared.helpers.i32Tohex(event.params.currentSeries))
+	let seriesId = shared.helpers.i32Tohex(event.params.currentSeries)
 	let globalState = global.setSeries(seriesId)
 	globalState.save()
 }
