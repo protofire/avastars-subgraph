@@ -348,6 +348,11 @@ type Account @entity {
 
 	"ath recieved as form of token burning"
 	ethBalance: BigInt!
+
+	# approvalsOwner:               [Approval!]! @derivedFrom(field: "owner")
+	# approvalsApproved:            [Approval!]! @derivedFrom(field: "approved")
+	# approvalsForAllOwner:         [ApprovalForAll!]! @derivedFrom(field: "owner")
+	# approvalsForAllOperator:      [ApprovalForAll!]! @derivedFrom(field: "operator")
 }
 
 
