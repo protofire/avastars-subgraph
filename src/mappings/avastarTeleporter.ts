@@ -79,7 +79,7 @@ export function handleTransaction(event: TransferEvent): void {
 
 }
 
-export function handleApproval(event: ApprovalEvent) {
+export function handleApproval(event: ApprovalEvent): void {
 	let tokenId = event.params.tokenId.toHex()
 	let ownerAddress = event.params.owner
 	let approvedAddress = event.params.approved
@@ -94,7 +94,7 @@ export function handleApproval(event: ApprovalEvent) {
 	token.save()
 }
 
-export function handleApprovalForAll(event: ApprovalForAllEvent) {
+export function handleApprovalForAll(event: ApprovalForAllEvent): void {
 	let ownerAddress = event.params.owner
 	let operatorAddress = event.params.operator
 
