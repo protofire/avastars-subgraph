@@ -60,5 +60,5 @@ dataSources:
         - event: NewPrime(uint256,uint256,uint8,uint8,uint8,uint256)
           handler: handleMintNewPrime
         - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
+          handler: handleTransaction
       file: ./src/mappings/avastarTeleporter.ts

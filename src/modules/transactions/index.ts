@@ -1,6 +1,6 @@
 import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
 import { BigInt } from "@graphprotocol/graph-ts";
-import { Mint } from "../../../generated/schema";
+import { Mint, Burn } from "../../../generated/schema";
 
 export namespace transactions {
 
@@ -25,5 +25,14 @@ export namespace transactions {
 		transaction.token = token
 		transaction.timestamp = timestamp
 		return transaction as Mint
+	}
+
+	export function getNewBurn(from: string, token: string, timestamp: BigInt): Burn {
+		let transaction = new Burn(helpers.getNewTransactionId(from, ADDRESS_ZERO, timestamp))
+		transaction.from = from
+		transaction.to = ADDRESS_ZERO
+		transaction.token = token
+		transaction.timestamp = timestamp
+		return transaction as Burn
 	}
 }

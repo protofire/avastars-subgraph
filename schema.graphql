@@ -408,3 +408,26 @@ type Mint implements Transaction @entity {
 	"Current transaction type"
 	type: TranasctionType!
 }
+
+type Burn implements Transaction @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Seller account"
+	from: Account
+
+	"Buyer account"
+	to: Account
+
+	"Avastar traded"
+	token: Avastar
+
+	"Amount of tokens or ether"
+	amount: BigInt
+
+	"Transaction creation timestamp"
+	timestamp: BigInt!
+
+	"Current transaction type"
+	type: TranasctionType!
+}
