@@ -3,7 +3,8 @@ import {
 	CurrentGenerationSet as CurrentGenerationSetEvent,
 	CurrentSeriesSet as CurrentSeriesSetEvent,
 	TeleporterContractSet as TeleporterContractSetEvent,
-	DepositorBalance as DepositorBalanceEvent
+	DepositorBalance as DepositorBalanceEvent,
+	FranchiseBalanceWithdrawn as FranchiseBalanceWithdrawnEvent,
 } from '../../generated/AvastarPrimeMinter/AvastarPrimeMinter'
 import { ContractPaused, ContractUnpaused } from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
@@ -13,6 +14,23 @@ import {
 	shared,
 	transactions
 } from '../modules'
+
+export function handleFranchiseBalanceWithdrawn(event: FranchiseBalanceWithdrawnEvent): void {
+	let ownerAddress = event.params.owner
+	let amount = event.params.amount
+
+	let contractAccount = accounts.decreaseAccountEth(event.address, amount)
+	contractAccount.save()
+
+	let owner = accounts.increaseAccountEth(ownerAddress, amount)
+	owner.save()
+
+	let transaction = transactions.getNewDeposit(
+		contractAccount.id, owner.id,
+		amount, event.block.timestamp
+	)
+	transaction.save()
+}
 
 export function handleDepositorBalance(event: DepositorBalanceEvent): void {
 	let depositorAddress = event.params.depositor
@@ -28,7 +46,6 @@ export function handleDepositorBalance(event: DepositorBalanceEvent): void {
 		depositor.id, contractAccount.id,
 		balance, event.block.timestamp
 	)
-
 	transaction.save()
 }
 

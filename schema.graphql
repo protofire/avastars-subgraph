@@ -368,7 +368,8 @@ enum TranasctionType {
 	MINT,
 	BURN,
 	TRANSFER,
-	DEPOSIT
+	DEPOSIT,
+	WITHDRAW
  }
 
 
@@ -466,6 +467,29 @@ type Transfer implements Transaction @entity {
 }
 
 type Deposit implements Transaction @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Seller account"
+	from: Account
+
+	"Buyer account"
+	to: Account
+
+	"Avastar traded"
+	token: Avastar
+
+	"Amount of tokens or ether"
+	amount: BigInt
+
+	"Transaction creation timestamp"
+	timestamp: BigInt!
+
+	"Current transaction type"
+	type: TranasctionType!
+}
+
+type Withdraw implements Transaction @entity {
 	"Internal ID used for indexation"
 	id: ID!
 

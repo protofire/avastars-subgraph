@@ -1,6 +1,13 @@
 import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
 import { BigInt } from "@graphprotocol/graph-ts";
-import { Mint, Burn, Transfer, Delegation, Deposit } from "../../../generated/schema";
+import {
+	Mint,
+	Burn,
+	Transfer,
+	Delegation,
+	Deposit,
+	Withdraw,
+} from "../../../generated/schema";
 
 export namespace transactions {
 
@@ -9,6 +16,7 @@ export namespace transactions {
 		export let TRANSACTION_BURN = "BURN"
 		export let TRANSACTION_TRANSFER = "TRANSFER"
 		export let TRANSACTION_DEPOSIT = "DEPOSIT"
+		export let TRANSACTION_WITHDRAW = "WITHDRAW"
 	}
 
 	export namespace helpers {
@@ -71,6 +79,19 @@ export namespace transactions {
 		transaction.timestamp = timestamp
 		transaction.type = constants.TRANSACTION_DEPOSIT
 		return transaction as Deposit
+	}
+
+	export function getNewWithdraw(
+		from: string, to: string,
+		amount: BigInt, timestamp: BigInt
+	): Withdraw {
+		let transaction = new Withdraw(helpers.getNewTransactionId(from, to, timestamp))
+		transaction.from = from
+		transaction.to = to
+		transaction.amount = amount
+		transaction.timestamp = timestamp
+		transaction.type = constants.TRANSACTION_WITHDRAW
+		return transaction as Withdraw
 	}
 
 	export function getNewDelegation(owner: string, operator: string, approved: boolean): Delegation {

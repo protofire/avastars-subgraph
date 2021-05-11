@@ -21,4 +21,10 @@ export namespace accounts {
 		account.ethAmount = account.ethAmount.plus(amount)
 		return account as Account
 	}
+
+	export function decreaseAccountEth(accountAddress: Bytes, amount: BigInt): Account {
+		let account = getAccount(accountAddress)
+		account.ethAmount = account.ethAmount.minus(amount)
+		return account as Account
+	}
 }
