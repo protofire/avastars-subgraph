@@ -53,6 +53,8 @@ dataSources:
         - name: AvastarTeleporter
           file: ./abis/AvastarTeleporter.json
       eventHandlers:
+        - event: NewTrait(uint256,uint8,uint8,uint8,uint8,string)
+          handler: handleNewTrait
         - event: MetadataContractAddressSet(address)
           handler: handleMetadataContractAddressSet
         - event: ContractUnpaused()

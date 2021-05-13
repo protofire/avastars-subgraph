@@ -7,6 +7,7 @@ import {
 	ContractUnpaused,
 	ContractUpgrade as ContractUpgradeEvent,
 	NewPrime as NewPrimeEvent,
+	NewTrait as NewTraitEvent,
 	NewReplicant as NewReplicantEvent,
 	Transfer as TransferEvent,
 	Approval as ApprovalEvent,
@@ -163,7 +164,21 @@ export function handleNewReplicant(event: NewReplicantEvent): void {
 
 	let generation = generations.increaseGenerationMinted(generationId)
 	generation.save()
+}
 
+export function handleNewTrait(event: NewTraitEvent): void {
+	let traitId = event.params.id.toHex()
+	let generation = shared.helpers.i32Tohex(event.params.generation)
+	let gene = shared.helpers.i32Tohex(event.params.gene)
+	let rarity = shared.helpers.i32Tohex(event.params.rarity)
+	let variation = BigInt.fromI32(event.params.variation)
+	let name = event.params.name
+
+	let trait = traits.mintTrait(
+		traitId, generation, gene,
+		rarity, variation, name
+	)
+	trait.save()
 
 }
 

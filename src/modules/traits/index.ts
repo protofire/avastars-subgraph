@@ -21,6 +21,19 @@ export namespace traits {
 		return trait as Trait
 	}
 
+	export function mintTrait(
+		traitId: string, generation: string, gene: string,
+		rarity: string, variation: BigInt, name: string
+	): Trait {
+		let trait = getOrCreateTrait(traitId)
+		trait.name = name
+		trait.rarity = rarity
+		trait.generation = generation
+		trait.gene = gene
+		trait.variation = variation
+		return trait as Trait
+	}
+
 	export function getTraitById(id: BigInt, contractAddress: Address): Trait {
 		let traitId = id.toHex()
 		let trait = getOrCreateTrait(traitId)
