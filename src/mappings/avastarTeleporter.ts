@@ -24,6 +24,8 @@ import {
 	tokens,
 	traits,
 	transactions,
+	waves,
+	waves,
 } from '../modules'
 
 
@@ -107,6 +109,7 @@ export function handleApprovalForAll(event: ApprovalForAllEvent): void {
 	operator.save()
 
 	let delegation = transactions.getNewDelegation(owner.id, operator.id, event.params.approved)
+	delegation.save()
 }
 
 export function handleMintNewPrime(event: NewPrimeEvent): void {
@@ -139,6 +142,9 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let series = seriesModule.increaseSeriesMinted(seriesId)
 	series.save()
 
+	let wave = waves.increaseWaveMinted("0x0")
+	wave.save()
+
 }
 
 export function handleNewReplicant(event: NewReplicantEvent): void {
@@ -164,6 +170,8 @@ export function handleNewReplicant(event: NewReplicantEvent): void {
 
 	let generation = generations.increaseGenerationMinted(generationId)
 	generation.save()
+	let wave = waves.increaseWaveMinted("0x1")
+	wave.save()
 }
 
 export function handleNewTrait(event: NewTraitEvent): void {

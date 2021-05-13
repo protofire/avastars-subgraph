@@ -16,11 +16,15 @@ export namespace tokens {
 		let avastar = Avastar.load(tokenId)
 		if (avastar == null) {
 			// maybe it should be created or loaded
-			shared.logs.logCritical(
+			shared.logs.logInfo(
 				"loadAvastar",
-				"Couldn't find avastar w/ id: " + tokenId)
+				"Couldn't find avastar w/ id: " + tokenId
+			)
+			shared.logs.critical();
+
+
 			// by this point indexing would be already stopped
-			return avastar as Avastar as Avastar
+			return avastar as Avastar
 		}
 		return avastar as Avastar
 	}
