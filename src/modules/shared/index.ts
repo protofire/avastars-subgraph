@@ -24,6 +24,9 @@ export namespace shared {
 		export function getPropById(key: string, map: TypedMap<string, string>): string | null {
 			let val = map.get(key) as string | null
 			if (val == null) {
+				log.info('@@@ getPropById ::: {} : {} ', [
+					"Cannot find prop for key", key
+				])
 				log.warning('@@@ getPropById ::: {} : {} ', [
 					"Cannot find prop for key", key
 				])

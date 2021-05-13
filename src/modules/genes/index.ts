@@ -17,8 +17,8 @@ export namespace genes {
 			let GENE_NOSE = "0x7"
 			let GENE_MOUTH = "0x8"
 			let GENE_FACIAL_FEATURE = "0x9"
-			let GENE_EYES = "0x10"
-			let GENE_HAIR_STYLE = "0x11"
+			let GENE_EYES = "0xa"
+			let GENE_HAIR_STYLE = "0xb"
 			let GENE_NAMES = new TypedMap<string, string>()
 			GENE_NAMES.set(GENE_SKIN_TONE, "SKIN_TONE")
 			GENE_NAMES.set(GENE_HAIR_COLOR, "HAIR_COLOR")

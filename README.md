@@ -18,18 +18,38 @@ Get all avastars with it's properties name
   avastars{
 	  serial
 	  generation{
-		  name
+		  
+		  minted
 	  }
 	  series{
-		  name
+		  
+		  minted
 	  }
 	  gender{
-		  name
+		  
+		  minted
 	  }	
 	  wave{
-		  name
+		  
+		  minted
 	  }
 
   }
+}
+```
+
+```graphql
+{
+   rarities{
+    name
+    traits{
+      name
+      variation
+      gene{
+        name
+      }
+    }
+  }
+}
 }
 ```

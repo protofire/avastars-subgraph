@@ -2,7 +2,7 @@ import { TypedMap } from '@graphprotocol/graph-ts'
 import { integer } from '@protofire/subgraph-toolkit'
 import { Rarity } from "../../../generated/schema"
 import { shared } from "../shared"
-export namespace raritys {
+export namespace rarities {
 	export namespace constants {
 		export function getNames(): TypedMap<string, string> {
 			let RARITY_COMMON = "0x0"
