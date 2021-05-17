@@ -31,12 +31,12 @@ export namespace tokens {
 
 	export function mintPrime(
 		tokenId: string, serial: BigInt, generation: string,
-		series: string, gender: string, traitsId: string
+		serie: string, gender: string, traitsId: string
 	): Avastar {
 		let avastar = loadAvastar(tokenId)
 		avastar.serial = serial
 		avastar.generation = generation
-		avastar.series = series
+		avastar.serie = serie
 		avastar.gender = gender
 		avastar.traits = traitsId
 		avastar.wave = waves.constants.WAVE_PRIME

@@ -1,4 +1,5 @@
 export * from './accounts'
+export * from './attributions'
 export * from './contracts'
 export * from './genders'
 export * from './generations'

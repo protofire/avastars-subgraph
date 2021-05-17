@@ -34,7 +34,7 @@ export namespace global {
 
 	export function setSeries(seriesId: string): GlobalState {
 		let state = getGlobalState()
-		state.currentSeries = seriesId
+		state.currentSerie = seriesId
 		return state as GlobalState
 	}
 	export namespace teleporter {

@@ -12,10 +12,12 @@ import {
 	Transfer as TransferEvent,
 	Approval as ApprovalEvent,
 	ApprovalForAll as ApprovalForAllEvent,
+	AttributionSet as AttributionSetEvent,
 } from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
 import {
 	accounts,
+	attributions,
 	genders,
 	generations,
 	genes,
@@ -140,8 +142,8 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	generation.save()
 
 
-	let series = seriesModule.increaseSeriesMinted(seriesId)
-	series.save()
+	let serie = seriesModule.increaseSeriesMinted(seriesId)
+	serie.save()
 
 	let wave = waves.increaseWaveMinted("0x0")
 	wave.save()
@@ -215,4 +217,18 @@ export function handleContractPaused(event: ContractPaused): void {
 export function handleContractUnpaused(event: ContractUnpaused): void {
 	let teleporterState = global.teleporter.setPaused(true)
 	teleporterState.save()
+}
+
+export function handleAttributionSet(event: AttributionSetEvent): void {
+	let generationId = shared.helpers.i32Tohex(event.params.generation)
+
+	let attribution = attributions.getNewAttribution(
+		generationId, event.params.artist,
+		event.params.infoURI, event.block.timestamp
+	)
+	attribution.save()
+
+	let generation = generations.setAtribution(generationId, attribution.id)
+	generation.save()
+
 }

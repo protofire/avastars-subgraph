@@ -1,6 +1,6 @@
 import { integer } from '@protofire/subgraph-toolkit'
 import { TypedMap } from '@graphprotocol/graph-ts'
-import { Series } from "../../../generated/schema"
+import { Serie } from "../../../generated/schema"
 import { shared } from "../shared"
 
 export namespace series {
@@ -29,18 +29,19 @@ export namespace series {
 	}
 
 	export namespace helpers {
-		export function getSeriesName(id: string): string | null {
+
+		export function getSerieName(id: string): string | null {
 			return shared.helpers.getPropById(id, constants.getNames())
 		}
 
-		export function getOrCreateSeries(seriesId: string): Series {
-			let series = Series.load(seriesId)
-			if (series == null) {
-				series = new Series(seriesId)
-				series.name = getSeriesName(seriesId)
-				series.minted = integer.ZERO
+		export function getOrCreateSerie(serieId: string): Serie {
+			let serie = Serie.load(serieId)
+			if (serie == null) {
+				serie = new Serie(serieId)
+				serie.name = getSerieName(serieId)
+				serie.minted = integer.ZERO
 			}
-			return series as Series
+			return serie as Serie
 
 		}
 
@@ -48,9 +49,9 @@ export namespace series {
 
 
 
-	export function increaseSeriesMinted(seriesId: string): Series {
-		let series = helpers.getOrCreateSeries(seriesId)
-		series.minted = series.minted.plus(integer.ONE)
-		return series as Series
+	export function increaseSeriesMinted(serieId: string): Serie {
+		let serie = helpers.getOrCreateSerie(serieId)
+		serie.minted = serie.minted.plus(integer.ONE)
+		return serie as Serie
 	}
 }

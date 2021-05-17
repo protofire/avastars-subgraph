@@ -12,7 +12,7 @@ enum GenerationName {
     FIVE
 }
 
-enum SeriesName {
+enum SerieName {
     PROMO
     ONE
     TWO
@@ -107,8 +107,8 @@ type GlobalState @entity {
 	"AvastarsMetadata current state"
 	metadata: MetadataState! 
 
-	"Current series name"
-	currentSeries: Series 
+	"Current serie name"
+	currentSerie: Serie 
 
 	"Current generation name"
 	currentGeneration: Generation 
@@ -123,7 +123,7 @@ type GlobalState @entity {
 
 
 ##
-#  Common entities start
+#  Shared Properties entities start
 ##
 
 type Generation @entity {
@@ -132,6 +132,9 @@ type Generation @entity {
 
 	"current generation name (1 to 5)"
 	name: GenerationName
+
+	"the artist Attribution for a given Generation"
+	attribution: Attribution
 
 	"avastars from this generation"
 	avastars: [Avastar!]! @derivedFrom(field: "generation")
@@ -151,7 +154,7 @@ type Gender @entity {
 	"current gender name (any or female or male)"
 	name: GenderName
 
-	"avastars from this series"
+	"avastars from this Gender"
 	avastars: [Avastar!]! @derivedFrom(field: "gender")
 
 	"avastars minted for this gender"
@@ -206,25 +209,40 @@ type Rarity @entity {
 	minted: BigInt!
 }
 
-type Series @entity {
+type Serie @entity {
  	"Internal ID used for indexation"
 	id: ID!
 
-	"current series name ( promo or 1 to 5)"
+	"current serie name ( promo or 1 to 5)"
 	name: String 
 
-	"avastars from this series"
-	avastars: [Avastar!]! @derivedFrom(field: "series")
+	"avastars from this serie"
+	avastars: [Avastar!]! @derivedFrom(field: "serie")
 
-	"avastars minted on this series"
+	"avastars minted on this serie"
 	minted: BigInt!
 
 	"Traits minted for this serie"
-	traits: [TraitSerie!]! @derivedFrom(field: "series")
+	traits: [TraitSerie!]! @derivedFrom(field: "serie")
+}
+
+
+type Attribution @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"the generation that attribution was set for"
+	generation: Generation
+
+	"the artist who created the artwork for the generation"
+	artist: String
+
+	"the artist's website / portfolio URI"
+	infoUri: String
 }
 
 ##
-#  Common entities end
+#  Shared Properties entities start
 ##
 
 
@@ -243,7 +261,7 @@ type TraitSerie @entity {
   	trait: Trait!
 
 	"Serie id"  
-  	series: Series!
+  	serie: Serie!
 }
 
 type Trait @entity {
@@ -265,8 +283,8 @@ type Trait @entity {
 	"Variation of the gene the trait represents"
 	variation: BigInt 
 
-	"Series of the trait"
-	series: [TraitSerie!]! @derivedFrom(field: "trait")
+	"Serie of the trait"
+	serie: [TraitSerie!]! @derivedFrom(field: "trait")
  
 	"Trait's name ie: Cat Nose"
 	name: String
@@ -296,8 +314,8 @@ type Avastar @entity {
 	"avastar generation"
 	generation: Generation
 
-	"avastar series"
-	series: Series
+	"avastar serie"
+	serie: Serie
 
 	"avastars gender"
 	gender: Gender

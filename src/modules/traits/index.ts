@@ -34,6 +34,13 @@ export namespace traits {
 		return trait as Trait
 	}
 
+	export function getTraitIdByGenerationGeneAndVariation(): string {
+		// let geneNumber = decodeGEne(hash)
+		// get geneVariationNumber(hash)
+		// try_getIdByBla
+		return ""
+	}
+
 	export function getTraitById(id: BigInt, contractAddress: Address): Trait {
 		let traitId = id.toHex()
 		let trait = getOrCreateTrait(traitId)
@@ -59,7 +66,7 @@ export namespace traits {
 				let serieId = shared.helpers.i32Tohex(seriesArray[index]);
 				let traitSerie = getOrCreateTraitSerie(traitId, serieId)
 				traitSerie.trait = traitId
-				traitSerie.series = serieId
+				traitSerie.serie = serieId
 				traitSerie.save()
 			}
 

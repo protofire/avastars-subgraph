@@ -39,8 +39,13 @@ export namespace generations {
 
 	export function increaseGenerationMinted(generationId: string): Generation {
 		let generation = helpers.getOrCreateGeneration(generationId)
-
 		generation.minted = generation.minted.plus(integer.ONE)
+		return generation as Generation
+	}
+
+	export function setAtribution(generationId: string, atributionId: string): Generation {
+		let generation = helpers.getOrCreateGeneration(generationId)
+		generation.attribution = atributionId
 		return generation as Generation
 	}
 }
