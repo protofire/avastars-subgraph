@@ -2,16 +2,52 @@ import {
 	ContractUpgrade as ContractUpgradeEvent,
 	CurrentGenerationSet as CurrentGenerationSetEvent,
 	CurrentSeriesSet as CurrentSeriesSetEvent,
-	TeleporterContractSet as TeleporterContractSetEvent
+	TeleporterContractSet as TeleporterContractSetEvent,
+	DepositorBalance as DepositorBalanceEvent,
+	FranchiseBalanceWithdrawn as FranchiseBalanceWithdrawnEvent,
 } from '../../generated/AvastarPrimeMinter/AvastarPrimeMinter'
 import { ContractPaused, ContractUnpaused } from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
 import {
+	accounts,
 	global,
-	generations,
-	series as seriesModule,
-	shared
+	shared,
+	transactions
 } from '../modules'
+
+export function handleFranchiseBalanceWithdrawn(event: FranchiseBalanceWithdrawnEvent): void {
+	let ownerAddress = event.params.owner
+	let amount = event.params.amount
+
+	let contractAccount = accounts.decreaseAccountEth(event.address, amount)
+	contractAccount.save()
+
+	let owner = accounts.increaseAccountEth(ownerAddress, amount)
+	owner.save()
+
+	let transaction = transactions.getNewDeposit(
+		contractAccount.id, owner.id,
+		amount, event.block.timestamp
+	)
+	transaction.save()
+}
+
+export function handleDepositorBalance(event: DepositorBalanceEvent): void {
+	let depositorAddress = event.params.depositor
+	let balance = event.params.balance
+
+	let depositor = accounts.getAccount(depositorAddress)
+	depositor.save()
+
+	let contractAccount = accounts.increaseAccountEth(event.address, balance)
+	contractAccount.save()
+
+	let transaction = transactions.getNewDeposit(
+		depositor.id, contractAccount.id,
+		balance, event.block.timestamp
+	)
+	transaction.save()
+}
 
 
 export function handleCurrentGenerationSet(event: CurrentGenerationSetEvent): void {

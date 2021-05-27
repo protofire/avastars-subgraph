@@ -16,27 +16,39 @@ export namespace tokens {
 		let avastar = Avastar.load(tokenId)
 		if (avastar == null) {
 			// maybe it should be created or loaded
-			shared.logs.logCritical(
+			shared.logs.logInfo(
 				"loadAvastar",
-				"Couldn't find avastar w/ id: " + tokenId)
-			// by this point indexing would be already stopped
-			return avastar as Avastar as Avastar
+				"Couldn't find avastar w/ id: " + tokenId
+			)
+			shared.logs.critical();
 		}
 		return avastar as Avastar
 	}
 
-	export function mintAvastar(
+	export function mintPrime(
 		tokenId: string, serial: BigInt, generation: string,
-		series: string, gender: string, traitsId: string
+		serie: string, gender: string, traitsId: string
 	): Avastar {
 		let avastar = loadAvastar(tokenId)
 		avastar.serial = serial
 		avastar.generation = generation
-		avastar.series = series
+		avastar.serie = serie
 		avastar.gender = gender
 		avastar.traits = traitsId
 		avastar.wave = waves.constants.WAVE_PRIME
-		avastar.replicated = false
+		return avastar as Avastar
+	}
+
+	export function mintReplicant(
+		tokenId: string, serial: BigInt, generation: string,
+		gender: string, traitsId: string
+	): Avastar {
+		let avastar = loadAvastar(tokenId)
+		avastar.serial = serial
+		avastar.generation = generation
+		avastar.gender = gender
+		avastar.traits = traitsId
+		avastar.wave = waves.constants.WAVE_PREPLICANT
 		return avastar as Avastar
 	}
 

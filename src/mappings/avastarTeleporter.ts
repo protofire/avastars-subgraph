@@ -7,21 +7,28 @@ import {
 	ContractUnpaused,
 	ContractUpgrade as ContractUpgradeEvent,
 	NewPrime as NewPrimeEvent,
+	NewTrait as NewTraitEvent,
+	NewReplicant as NewReplicantEvent,
 	Transfer as TransferEvent,
 	Approval as ApprovalEvent,
 	ApprovalForAll as ApprovalForAllEvent,
+	AttributionSet as AttributionSetEvent,
 } from '../../generated/AvastarTeleporter/AvastarTeleporter'
 
 import {
 	accounts,
+	attributions,
 	genders,
 	generations,
+	genes,
 	global,
 	series as seriesModule,
 	shared,
 	tokens,
 	traits,
 	transactions,
+	rarities,
+	waves,
 } from '../modules'
 
 
@@ -105,6 +112,7 @@ export function handleApprovalForAll(event: ApprovalForAllEvent): void {
 	operator.save()
 
 	let delegation = transactions.getNewDelegation(owner.id, operator.id, event.params.approved)
+	delegation.save()
 }
 
 export function handleMintNewPrime(event: NewPrimeEvent): void {
@@ -114,10 +122,11 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let genderId = shared.helpers.i32Tohex(event.params.gender)
 	// Todo decode traits
 	let traitsId = event.params.traits
-	let trait = traits.getTraitById(traitsId, event.address)
-	trait.save()
+	traits.getAndSaveTraits(traitsId, event.params.generation, event.address)
+	// let trait = traits.getAndSaveTraits(traitsId, event.params.generation, event.address)
+	// trait.save()
 
-	let avastar = tokens.mintAvastar(
+	let avastar = tokens.mintPrime(
 		tokenId,
 		event.params.serial,
 		generationId,
@@ -134,8 +143,61 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	generation.save()
 
 
-	let series = seriesModule.increaseSeriesMinted(seriesId)
-	series.save()
+	let serie = seriesModule.increaseSeriesMinted(seriesId)
+	serie.save()
+
+	let wave = waves.increaseWaveMinted("0x0")
+	wave.save()
+
+}
+
+export function handleNewReplicant(event: NewReplicantEvent): void {
+	let tokenId = event.params.id.toHex()
+	let generationId = shared.helpers.i32Tohex(event.params.generation)
+	let genderId = shared.helpers.i32Tohex(event.params.gender)
+	// Todo decode traits
+	let traitHash = event.params.traits
+	traits.getAndSaveTraits(traitHash, event.params.generation, event.address)
+	// let trait = traits.getAndSaveTraits(traitsId, generation, event.address)
+	// trait.save()
+
+	let avastar = tokens.mintReplicant(
+		tokenId,
+		event.params.serial,
+		generationId,
+		genderId,
+		traitHash.toHex()
+	)
+	avastar.save()
+
+	let gender = genders.increaseGenderMinted(genderId)
+	gender.save()
+
+	let generation = generations.increaseGenerationMinted(generationId)
+	generation.save()
+	let wave = waves.increaseWaveMinted("0x1")
+	wave.save()
+}
+
+export function handleNewTrait(event: NewTraitEvent): void {
+	let traitId = event.params.id.toHex()
+	let generation = shared.helpers.i32Tohex(event.params.generation)
+	let geneId = shared.helpers.i32Tohex(event.params.gene)
+	let rarityId = shared.helpers.i32Tohex(event.params.rarity)
+	let variation = BigInt.fromI32(event.params.variation)
+	let name = event.params.name
+
+	let trait = traits.mintTrait(
+		traitId, generation, geneId,
+		rarityId, variation, name
+	)
+	trait.save()
+
+	let gene = genes.increaseGeneMinted(geneId)
+	gene.save()
+
+	let rarity = rarities.increaseRarityMinted(rarityId)
+	rarity.save()
 
 }
 
@@ -157,4 +219,18 @@ export function handleContractPaused(event: ContractPaused): void {
 export function handleContractUnpaused(event: ContractUnpaused): void {
 	let teleporterState = global.teleporter.setPaused(true)
 	teleporterState.save()
+}
+
+export function handleAttributionSet(event: AttributionSetEvent): void {
+	let generationId = shared.helpers.i32Tohex(event.params.generation)
+
+	let attribution = attributions.getNewAttribution(
+		generationId, event.params.artist,
+		event.params.infoURI, event.block.timestamp
+	)
+	attribution.save()
+
+	let generation = generations.setAtribution(generationId, attribution.id)
+	generation.save()
+
 }

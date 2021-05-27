@@ -19,6 +19,10 @@ dataSources:
         - name: AvastarPrimeMinter
           file: ./abis/AvastarPrimeMinter.json
       eventHandlers:
+        - event: FranchiseBalanceWithdrawn(indexed address,uint256)
+          handler: handleFranchiseBalanceWithdrawn
+        - event: DepositorBalance(indexed address,uint256)
+          handler: handleDepositorBalance
         - event: ContractUnpaused()
           handler: handleContractUnpaused
         - event: ContractPaused()
@@ -49,6 +53,10 @@ dataSources:
         - name: AvastarTeleporter
           file: ./abis/AvastarTeleporter.json
       eventHandlers:
+        - event: AttributionSet(uint8,string,string)
+          handler: handleAttributionSet
+        - event: NewTrait(uint256,uint8,uint8,uint8,uint8,string)
+          handler: handleNewTrait
         - event: MetadataContractAddressSet(address)
           handler: handleMetadataContractAddressSet
         - event: ContractUnpaused()
@@ -59,6 +67,8 @@ dataSources:
           handler: handleContractUpgrade
         - event: NewPrime(uint256,uint256,uint8,uint8,uint8,uint256)
           handler: handleMintNewPrime
+        - event: NewReplicant(uint256,uint256,uint8,uint8,uint256)
+          handler: handleNewReplicant
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransaction
         - event: Approval(indexed address,indexed address,indexed uint256)
