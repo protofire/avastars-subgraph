@@ -21,10 +21,6 @@ export namespace tokens {
 				"Couldn't find avastar w/ id: " + tokenId
 			)
 			shared.logs.critical();
-
-
-			// by this point indexing would be already stopped
-			return avastar as Avastar
 		}
 		return avastar as Avastar
 	}
@@ -40,7 +36,6 @@ export namespace tokens {
 		avastar.gender = gender
 		avastar.traits = traitsId
 		avastar.wave = waves.constants.WAVE_PRIME
-		avastar.replicated = false
 		return avastar as Avastar
 	}
 

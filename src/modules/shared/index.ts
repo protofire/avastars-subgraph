@@ -21,7 +21,7 @@ export namespace shared {
 			return hex
 		}
 
-		export function getPropById(key: string, map: TypedMap<string, string>): string | null {
+		export function getPropById(key: string, map: TypedMap<string, string>): string {
 			let val = map.get(key) as string | null
 			if (val == null) {
 				log.info('@@@ getPropById ::: {} : {} ', [
@@ -31,6 +31,22 @@ export namespace shared {
 					"Cannot find prop for key", key
 				])
 				logs.critical()
+				return ""
+			}
+			return val
+		}
+
+		export function getBigIntById(key: string, map: TypedMap<string, BigInt>): BigInt {
+			let val = map.get(key) as BigInt | null
+			if (val == null) {
+				log.info('@@@ getPropById ::: {} : {} ', [
+					"Cannot find prop for key", key
+				])
+				log.warning('@@@ getPropById ::: {} : {} ', [
+					"Cannot find prop for key", key
+				])
+				logs.critical()
+				return BigInt.fromString("0")
 			}
 			return val
 		}

@@ -122,8 +122,9 @@ export function handleMintNewPrime(event: NewPrimeEvent): void {
 	let genderId = shared.helpers.i32Tohex(event.params.gender)
 	// Todo decode traits
 	let traitsId = event.params.traits
-	let trait = traits.getTraitById(traitsId, event.address)
-	trait.save()
+	traits.getAndSaveTraits(traitsId, event.params.generation, event.address)
+	// let trait = traits.getAndSaveTraits(traitsId, event.params.generation, event.address)
+	// trait.save()
 
 	let avastar = tokens.mintPrime(
 		tokenId,
@@ -155,16 +156,17 @@ export function handleNewReplicant(event: NewReplicantEvent): void {
 	let generationId = shared.helpers.i32Tohex(event.params.generation)
 	let genderId = shared.helpers.i32Tohex(event.params.gender)
 	// Todo decode traits
-	let traitsId = event.params.traits
-	let trait = traits.getTraitById(traitsId, event.address)
-	trait.save()
+	let traitHash = event.params.traits
+	traits.getAndSaveTraits(traitHash, event.params.generation, event.address)
+	// let trait = traits.getAndSaveTraits(traitsId, generation, event.address)
+	// trait.save()
 
 	let avastar = tokens.mintReplicant(
 		tokenId,
 		event.params.serial,
 		generationId,
 		genderId,
-		traitsId.toHex()
+		traitHash.toHex()
 	)
 	avastar.save()
 
