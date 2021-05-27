@@ -37,24 +37,13 @@ Only `Serie` has en especial `many to many` relationship with Traits entities wh
 		· Gene
 		· Rarity
 		· Serie
-		· 
+		
 ## Example queries
 
-Get all avastars with it's properties name
-
 ```graphql
+# Get first 50 avastars
 {
-  avastars{
-	  series{
-		  name
-	  }
-  }
-}
-```
-
-```graphql
-{
-  avastars{
+  avastars (first: 50){
 	  serial
 	  generation{
 		  
@@ -77,7 +66,9 @@ Get all avastars with it's properties name
 }
 ```
 
+
 ```graphql
+# Get all rarity levels including related traits
 {
    rarities{
     name
@@ -89,5 +80,78 @@ Get all avastars with it's properties name
       }
     }
   }
+}
+```
+
+
+```graphql
+# Get avastars by gender
+{
+   genders{
+    name
+    minted
+    avastars(first:5){
+		serial
+		generation {
+			name
+		}
+
+	}
+  }
+}
+```
+
+```graphql
+# Get traits by serie
+{
+   series{
+    name
+    minted
+    avastars(first:5){
+		serial
+		generation {
+			name
+		}
+
+	}
+  }
+}
+```
+
+```graphql
+# Get traits by serie
+{
+
+type PrimeMinterState @entity {
+	"Internal ID used for indexation"
+	id: ID!
+	
+	"Current prime minter contract address"
+	address: Bytes
+
+	"Current prime minter contract status"
+	paused: Boolean
+}
+# get avastars current global state
+GlobalState{
+	primeMinter: {
+		address
+		paused
+	}
+	teleporter: {
+		address
+		paused
+	} 
+	metadata: {
+		address
+		paused
+	} 
+	currentSerie:{
+		name
+	}
+	currentGeneration: {
+		name
+	}
+
 }
 ```
