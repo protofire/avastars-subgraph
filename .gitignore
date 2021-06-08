@@ -107,3 +107,4 @@ generated
 build
 contract.sol
 *.contract.sol
+.DS_Store
