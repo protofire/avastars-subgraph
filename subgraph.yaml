@@ -1,4 +1,6 @@
 specVersion: 0.0.2
+description: This subgraph aims to be some sort of lookup matrix that allows to sort & group avastars by any of it's properties
+repository: https://github.com/protofire/avastars-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
