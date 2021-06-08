@@ -1,4 +1,6 @@
 specVersion: 0.0.2
+description: This subgraph aims to be some sort of lookup matrix that allows to sort & group avastars by any of it's properties
+repository: https://github.com/protofire/avastars-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
@@ -19,6 +21,60 @@ dataSources:
         - name: AvastarPrimeMinter
           file: ./abis/AvastarPrimeMinter.json
       eventHandlers:
+        - event: FranchiseBalanceWithdrawn(indexed address,uint256)
+          handler: handleFranchiseBalanceWithdrawn
+        - event: DepositorBalance(indexed address,uint256)
+          handler: handleDepositorBalance
+        - event: ContractUnpaused()
+          handler: handleContractUnpaused
+        - event: ContractPaused()
+          handler: handleContractPaused
+        - event: ContractUpgrade(address)
+          handler: handleContractUpgrade
         - event: CurrentGenerationSet(uint8)
           handler: handleCurrentGenerationSet
-      file: ./src/mapping.ts
+        - event: CurrentSeriesSet(uint8)
+          handler: handleCurrentSeriesSet
+        - event: TeleporterContractSet(address)
+          handler: handleTeleporterContractSet
+      file: ./src/mappings/avastarPrimeMinter.ts
+  - kind: ethereum/contract
+    name: AvastarTeleporter
+    network: mainnet
+    source:
+      address: "0xf3e778f839934fc819cfa1040aabacecba01e049"
+      abi: AvastarTeleporter
+      startBlock: 9432995
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Account
+      abis:
+        - name: AvastarTeleporter
+          file: ./abis/AvastarTeleporter.json
+      eventHandlers:
+        - event: AttributionSet(uint8,string,string)
+          handler: handleAttributionSet
+        - event: NewTrait(uint256,uint8,uint8,uint8,uint8,string)
+          handler: handleNewTrait
+        - event: MetadataContractAddressSet(address)
+          handler: handleMetadataContractAddressSet
+        - event: ContractUnpaused()
+          handler: handleContractUnpaused
+        - event: ContractPaused()
+          handler: handleContractPaused
+        - event: ContractUpgrade(address)
+          handler: handleContractUpgrade
+        - event: NewPrime(uint256,uint256,uint8,uint8,uint8,uint256)
+          handler: handleMintNewPrime
+        - event: NewReplicant(uint256,uint256,uint8,uint8,uint256)
+          handler: handleNewReplicant
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransaction
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+      file: ./src/mappings/avastarTeleporter.ts
