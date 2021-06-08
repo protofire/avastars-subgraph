@@ -2,7 +2,7 @@
 
 ## Intro
 
-This subgraph aims to create a friendly experience for front-end developers, allowing to create new tools over the avastars project. The main idea behind this subgraphs y to create some sort of lookup matrix that allows to sort & group avastars by any of it's properties:
+This subgraph aims to create a friendly experience for front-end developers, allowing to create new tools over the avastars project. The main idea behind this subgraphs is to create some sort of lookup matrix that allows to sort & group avastars by any of it's properties:
 
 		"All primes group by gene, by generation, by gender, by rarity, etc"
 
